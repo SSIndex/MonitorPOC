@@ -8,7 +8,7 @@ import GaugeChart from '@/_components/gauge_chart';
 // Main General Analysis Page
 export default function GeneralAnalysis() {
   // Dummy data (replace with your dynamic values)
-  const companyName = "Example Corp";
+  const companyName = "Clínica Meds";
   const industry = "Technology";
   const country = "USA";
   const region = "North America";
@@ -51,11 +51,11 @@ export default function GeneralAnalysis() {
       <main className="container mx-auto px-4 py-6">
         {/* Company Card Section */}
         <section className="pt-6">
-          <div className="bg-white rounded-lg shadow-md p-6 flex items-center space-x-6">
-            <div className="flex-1">
-              <h2 className="text-2xl font-bold text-gray-800">{companyName}</h2>
-              <p className="text-gray-600">{industry} • {country} • {region}</p>
-              <p className="text-lg font-semibold text-blue-600 mt-2">
+          <div className="bg-ssindex-card-blue rounded-lg shadow-md p-6 flex items-center space-x-6">
+            <div className="flex-1 ">
+              <h2 className="text-2xl font-bold text-white">{companyName}</h2>
+              <p className="text-white">{industry} • {country} • {region}</p>
+              <p className="text-lg font-semibold text-white mt-2">
                 Overview: {generalScore >= 70 ? "Excellent" : "Good"}
               </p>
               <DatePickerYearly />
@@ -71,7 +71,7 @@ export default function GeneralAnalysis() {
             <div className="bg-gray-600 text-white p-6 rounded-lg">
               <h5 className="text-lg font-semibold">Percentile Analysis</h5>
               <p className="mt-2">
-                The result of the company in analysis is benchmarked with three groups of data:
+                The result of the company in analysis is benchmarked with two groups of data:
               </p>
               <ol className="list-decimal ml-4 mt-2 space-y-1">
                 <li><strong>Global Universe</strong>: Sample of companies worldwide.</li>
@@ -99,7 +99,7 @@ export default function GeneralAnalysis() {
         <section className="pt-6">
           <h4 className="text-xl font-bold text-blue-600">Performance Analysis</h4>
           <p className="text-gray-600 mt-1">
-            The results are classified in a 5-category ratio and benchmarked with three groups.
+            The results are classified in a 5-category ratio and benchmarked with two groups.
           </p>
           <div className="mt-4 bg-white rounded-lg shadow-md p-6">
             {/* Placeholder for Histogram */}
