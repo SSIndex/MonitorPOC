@@ -68,7 +68,7 @@ export default function GeneralAnalysis() {
         <section className="pt-6">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {/* Left Column */}
-            <div className="bg-gray-600 text-white p-6 rounded-lg">
+            <div className="bg-secondary text-white p-6 rounded-lg">
               <h5 className="text-lg font-semibold">Percentile Analysis</h5>
               <p className="mt-2">
                 The result of the company in analysis is benchmarked with two groups of data:
@@ -97,7 +97,7 @@ export default function GeneralAnalysis() {
 
         {/* Performance Analysis Section */}
         <section className="pt-6">
-          <h4 className="text-xl font-bold text-blue-600">Performance Analysis</h4>
+          <h4 className="text-xl font-bold text-primary">Performance Analysis</h4>
           <p className="text-gray-600 mt-1">
             The results are classified in a 5-category ratio and benchmarked with two groups.
           </p>
@@ -111,7 +111,7 @@ export default function GeneralAnalysis() {
 
         {/* SASB Impact Analysis Section */}
         <section className="pt-6">
-          <h4 className="text-xl font-bold text-blue-600">SASB Impact Analysis</h4>
+          <h4 className="text-xl font-bold text-primary">SASB Impact Analysis</h4>
           <p className="text-gray-600 mt-1">
             Stakeholders evaluate performance per SASB methodology.
           </p>
@@ -139,7 +139,7 @@ export default function GeneralAnalysis() {
 
         {/* SASB Radar Chart Section */}
         <section className="pt-6">
-          <h4 className="text-xl font-bold text-blue-600">SASB Radar Chart</h4>
+          <h4 className="text-xl font-bold text-primary">SASB Radar Chart</h4>
           <div className="mt-4 bg-white rounded-lg shadow-md p-6 grid grid-cols-1 md:grid-cols-3 gap-6">
             {/* Table */}
             <div className="col-span-1">
