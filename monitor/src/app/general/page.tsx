@@ -4,6 +4,7 @@ import DatePickerYearly from '@/_components/datepicker';
 import Navbar from '@/_components/navbar';
 import GaugeChart from '@/_components/gauge_chart';
 import { UserTable } from '@/_components/usertable'
+import ExampleCard from '@/_components/example';
 
 
 // Main General Analysis Page
@@ -51,7 +52,7 @@ export default function GeneralAnalysis() {
       {/* Main Content */}
       <main className="container mx-auto px-40 py-6">
         {/* Company Card Section */}
-        <section className="pt-6">
+        {/* <section className="pt-6">
           <div className="bg-ssindex-card-blue rounded-lg shadow-md p-6 flex items-center space-x-6">
             <div className="flex-1 ">
               <h2 className="text-2xl font-bold text-white">{companyName}</h2>
@@ -63,7 +64,8 @@ export default function GeneralAnalysis() {
             </div>
             <GaugeChart score={generalScore} scoreText="Excellent" />
           </div>
-        </section>
+        </section> */}
+        <ExampleCard />
 
         {/* Percentile Analysis Section */}
         <section className="pt-6">
