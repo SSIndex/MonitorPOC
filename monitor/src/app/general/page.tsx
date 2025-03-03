@@ -1,71 +1,9 @@
 import Image from 'next/image';
 import Link from 'next/link';
+import DatePickerYearly from '@/_components/datepicker';
+import Navbar from '@/_components/navbar';
+import GaugeChart from '@/_components/gauge_chart';
 
-// Navbar Component (from previous improvement)
-function Navbar() {
-  const userName = "José Miguel";
-  const initials = userName
-    .split(' ')
-    .map(word => word[0])
-    .join('')
-    .toUpperCase()
-    .slice(0, 2);
-
-  return (
-    <nav className="bg-gray-800 text-white shadow-md">
-      <div className="flex items-center justify-between p-4 max-w-7xl mx-auto">
-        <div className="flex-shrink-0">
-          <Image
-            src="https://elasticbeanstalk-us-east-1-518344696083.s3.us-east-1.amazonaws.com/esg3-static-files/app/images/logos/LOGO-Positivo-Version-secundaria.png"
-            alt="Logo"
-            width={100}
-            height={100}
-            className="h-12 w-auto"
-          />
-        </div>
-        <div className="flex space-x-6 text-sm font-medium">
-          <Link href="#" className="hover:text-gray-300 transition-colors">General</Link>
-          <Link href="#" className="hover:text-gray-300 transition-colors">SASB</Link>
-          <Link href="#" className="hover:text-gray-300 transition-colors">MAP</Link>
-          <Link href="#" className="hover:text-gray-300 transition-colors">Benchmarks</Link>
-          <Link href="#" className="hover:text-gray-300 transition-colors">Awards</Link>
-          <Link href="#" className="hover:text-gray-300 transition-colors">Time Trends</Link>
-        </div>
-        <div className="flex items-center space-x-2">
-          <div className="flex items-center justify-center w-10 h-10 rounded-full bg-gray-600 text-white font-semibold text-sm">
-            {initials}
-          </div>
-          <span className="text-xs whitespace-nowrap hidden md:block">
-            {`Sesión: ${userName}`}
-          </span>
-        </div>
-      </div>
-    </nav>
-  );
-}
-
-// Dummy Gauge Chart Component (Placeholder)
-function GaugeChart({ score, scoreText }) {
-  return (
-    <div className="w-32 h-32 bg-gray-200 rounded-full flex items-center justify-center text-center">
-      <div>
-        <p className="text-2xl font-bold text-blue-600">{score}</p>
-        <p className="text-sm text-gray-600">{scoreText}</p>
-      </div>
-    </div>
-  );
-}
-
-// Dummy DatePicker Component (Placeholder)
-function DatePickerYearly() {
-  return (
-    <select className="mt-2 p-2 border rounded-md text-gray-700">
-      <option>2025</option>
-      <option>2024</option>
-      <option>2023</option>
-    </select>
-  );
-}
 
 // Main General Analysis Page
 export default function GeneralAnalysis() {
