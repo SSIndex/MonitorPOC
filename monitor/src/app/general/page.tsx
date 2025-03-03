@@ -3,6 +3,7 @@ import Link from 'next/link';
 import DatePickerYearly from '@/_components/datepicker';
 import Navbar from '@/_components/navbar';
 import GaugeChart from '@/_components/gauge_chart';
+import { UserTable } from '@/_components/usertable'
 
 
 // Main General Analysis Page
@@ -48,7 +49,7 @@ export default function GeneralAnalysis() {
       <Navbar />
 
       {/* Main Content */}
-      <main className="container mx-auto px-4 py-6">
+      <main className="container mx-auto px-40 py-6">
         {/* Company Card Section */}
         <section className="pt-6">
           <div className="bg-ssindex-card-blue rounded-lg shadow-md p-6 flex items-center space-x-6">
@@ -115,7 +116,7 @@ export default function GeneralAnalysis() {
           <p className="text-gray-600 mt-1">
             Stakeholders evaluate performance per SASB methodology.
           </p>
-          <div className="mt-4 bg-white rounded-lg shadow-md p-6">
+          {/* <div className="mt-4 bg-white rounded-lg shadow-md p-6">
             <table className="w-full text-left">
               <thead>
                 <tr className="bg-gray-200">
@@ -134,7 +135,8 @@ export default function GeneralAnalysis() {
                 ))}
               </tbody>
             </table>
-          </div>
+          </div> */}
+          <UserTable />
         </section>
 
         {/* SASB Radar Chart Section */}
