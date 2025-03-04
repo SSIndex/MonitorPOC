@@ -8,6 +8,8 @@ import React, { useMemo } from 'react';
 import GaugeChart from './gauge_chart';
 import ExampleGaugeChart from './gauge_chart';
 import DatePickerYearly from './datepicker';
+import clinicaMeds from '../../public/clinicaMeds.jpeg';
+import Image from 'next/image';
 
 // Props interface for TypeScript typing
 interface CardProps {
@@ -23,10 +25,7 @@ interface CardProps {
   datePicker?: JSX.Element; // DatePickerYearly component render result
 }
 
-// Default image constant
-// const DEFAULT_IMAGE = '/assets/clinicaMeds.jpeg';
-const DEFAULT_IMAGE = 'clinicaMeds.jpeg';
-
+const DEFAULT_IMAGE = clinicaMeds
 // Card Component
 export const Card: React.FC<CardProps> = ({
   companyName,
@@ -37,7 +36,7 @@ export const Card: React.FC<CardProps> = ({
   overviewGraph,
   companyImage = DEFAULT_IMAGE,
   textColor = 'text-white',
-  backgroundColor = 'bg-blue-600', // Maps to `text-bg-ssindex-card-blue` as a default
+  backgroundColor = 'bg-ssindex-card-blue',
   datePicker,
 }) => {
   // Generate overview text based on overview score (equivalent to _generate_overview_text)
@@ -53,47 +52,44 @@ export const Card: React.FC<CardProps> = ({
   }, [overview]);
 
   return (
-    <section className="pt-3">
-      <div
-        className={`card rounded-md p-5 ${backgroundColor} ${textColor}`}
-      >
+    <section>
+      <div className={`card rounded-md ps-7 pe-7 pb-7 ${backgroundColor} ${textColor}`}>
         {/* Date Picker Section */}
         {datePicker && (
-          <div className="flex justify-end pt-1 pe-5">
-            {datePicker}
-          </div>
+          <div className="flex justify-end pt-1 pe-5">{datePicker}</div>
         )}
 
         {/* Card Body */}
         <div className="card-body">
-          <div className="flex gap-5 pb-3 ps-5 pe-5 items-center flex-col md:flex-row">
+          <div className="flex gap-5 pb-4 ps-5 pe-5 items-center flex-col md:flex-row">
             {/* Left Column: Company Info and Overview */}
             <div className="flex-1">
-              <div className="flex gap-4">
-                {/* Company Image */}
-                <div>
-                  <img
+              <div className="flex gap-4 items-center">
+                  <Image
                     src={companyImage}
                     alt="Company Image"
-                    className="rounded-full w-[158px] h-[158px] object-cover"
+                    width={158}
+                    height={158}
+                    className="rounded-full"
                   />
-                </div>
-                {/* Company Details */}
-                <div>
+                <div className='flex flex-col gap-3'>
                   <p className="text-2xl font-bold">{companyName}</p>
                   <p className="text-lg">
-                    <span className="font-bold">Region: </span>{region}
+                    <span className="font-bold">Region: </span>
+                    {region}
                   </p>
                   <p className="text-lg">
-                    <span className="font-bold">Industry: </span>{industry}
+                    <span className="font-bold">Industry: </span>
+                    {industry}
                   </p>
                   <p className="text-lg">
-                    <span className="font-bold">Country: </span>{country}
+                    <span className="font-bold">Country: </span>
+                    {country}
                   </p>
                 </div>
               </div>
-              {/* Overview Text */}
-              <div className="mt-2">
+              
+              <div className="mt-7">
                 <p>
                   <span className="font-bold">Overview: {overview}. </span>
                   {overviewText}
@@ -101,10 +97,7 @@ export const Card: React.FC<CardProps> = ({
               </div>
             </div>
 
-            {/* Right Column: Overview Graph */}
-            <div className="flex-1 rounded-lg bg-white">
-              {overviewGraph}
-            </div>
+            <div className="flex-1 rounded-lg bg-white">{overviewGraph}</div>
           </div>
         </div>
       </div>
@@ -129,10 +122,10 @@ const ExampleCard: React.FC = () => {
 
   return (
     <Card
-      companyName="Example Corp"
-      industry="Healthcare"
-      country="USA"
-      region="North America"
+      companyName="Clínica MEDS"
+      industry="Hospitales y Salud"
+      country="Chile"
+      region="South America"
       overview={categorizeScore(generalScore)}
       overviewGraph={
         <ExampleGaugeChart/>
