@@ -73,10 +73,10 @@ export default function GeneralAnalysis() {
             {/* Left Column */}
             <div className="bg-secondary text-white p-6 rounded-lg">
               <h5 className="text-lg font-semibold">Percentile Analysis</h5>
-              <p className="mt-2">
+              <p className="mt-2 text-md">
                 The result of the company in analysis is benchmarked with two groups of data:
               </p>
-              <ol className="list-decimal ml-4 mt-2 space-y-1">
+              <ol className="list-decimal ml-4 mt-2 space-y-1 text-md">
                 <li><strong>Global Universe</strong>: Sample of companies worldwide.</li>
                 <li><strong>Industry in Country</strong>: Same industry and country.</li>
               </ol>
@@ -113,32 +113,14 @@ export default function GeneralAnalysis() {
         </section>
 
         {/* SASB Impact Analysis Section */}
-        <section className="pt-6">
+        <section className="pt-6 mt-6">
           <h4 className="text-xl font-bold text-primary">SASB Impact Analysis</h4>
           <p className="text-gray-600 mt-1">
             Stakeholders evaluate performance per SASB methodology.
           </p>
-          {/* <div className="mt-4 bg-white rounded-lg shadow-md p-6">
-            <table className="w-full text-left">
-              <thead>
-                <tr className="bg-gray-200">
-                  <th className="p-3">Category</th>
-                  <th className="p-3">Score</th>
-                  <th className="p-3">Percentile</th>
-                </tr>
-              </thead>
-              <tbody>
-                {sasbTableData.map((row, index) => (
-                  <tr key={index} className="border-b">
-                    <td className="p-3">{row.category}</td>
-                    <td className="p-3">{row.score}</td>
-                    <td className="p-3">{row.percentile}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div> */}
-          <UserTable />
+          <div className='bg-white rounded-lg shadow-md p-6'>
+            <UserTable />
+          </div>
         </section>
 
         {/* SASB Radar Chart Section */}
