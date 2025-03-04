@@ -6,6 +6,7 @@ import React, { useMemo } from 'react';
 // import { GaugeChart } from './GaugeChart'; // Placeholder for your gauge chart component
 // import { DatePickerYearly } from './DatePickerYearly'; // Placeholder for your date picker
 import GaugeChart from './gauge_chart';
+import ExampleGaugeChart from './gauge_chart';
 import DatePickerYearly from './datepicker';
 
 // Props interface for TypeScript typing
@@ -54,7 +55,7 @@ export const Card: React.FC<CardProps> = ({
   return (
     <section className="pt-3">
       <div
-        className={`card rounded-3 ${backgroundColor} ${textColor}`}
+        className={`card rounded-md p-5 ${backgroundColor} ${textColor}`}
       >
         {/* Date Picker Section */}
         {datePicker && (
@@ -134,12 +135,7 @@ const ExampleCard: React.FC = () => {
       region="North America"
       overview={categorizeScore(generalScore)}
       overviewGraph={
-        <GaugeChart
-          score={generalScore}
-          scoreText={categorizeScore(generalScore)}
-          minValue={mockMinValue}
-          maxValue={mockMaxValue}
-        />
+        <ExampleGaugeChart/>
       }
       datePicker={<DatePickerYearly />}
     />
