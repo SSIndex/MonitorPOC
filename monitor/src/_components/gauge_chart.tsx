@@ -2,23 +2,22 @@
 
 import React, { useMemo } from 'react';
 
-// Props interface for TypeScript typing
 interface GaugeChartProps {
   score: number;
-  scoreText: string; // e.g., "Poor", "Low", "Average", "Good", "Excellent"
+  scoreText: string;
   minValue?: number;
   maxValue?: number;
-  labels?: React.ReactNode[]; // Custom labels for score ranges
-  scoreLabels?: React.ReactNode[]; // Custom score range labels (e.g., "[0-19]")
+  labels?: React.ReactNode[];
+  scoreLabels?: React.ReactNode[];
 }
 
 // Utility function to categorize score to Tailwind text color class
 const categorizeScoreToTextClassName = (score: number): string => {
-  if (score < 20) return 'text-red-600'; // Poor
-  if (score < 40) return 'text-orange-500'; // Low
-  if (score < 60) return 'text-yellow-500'; // Average
-  if (score < 80) return 'text-green-600'; // Good
-  return 'text-blue-600'; // Excellent
+  if (score < 20) return 'text-ssindex-poor';
+  if (score < 40) return 'text-ssindex-low';
+  if (score < 60) return 'text-ssindex-average';
+  if (score < 80) return 'text-ssindex-good';
+  return 'text-ssindex-excellent';
 };
 
 // GaugeChart Component
@@ -33,22 +32,22 @@ export const GaugeChart: React.FC<GaugeChartProps> = ({
   // Default labels and score labels
   const DEFAULT_LABELS = useMemo(
     () => [
-      <b key="poor" className="text-red-600">Poor</b>,
-      <b key="low" className="text-orange-500">Low</b>,
-      <b key="average" className="text-yellow-500">Average</b>,
-      <b key="good" className="text-green-600">Good</b>,
-      <b key="excellent" className="text-blue-600">Excellent</b>,
+      <b key="poor" className="text-ssindex-poor">Poor</b>,
+      <b key="low" className="text-ssindex-low">Low</b>,
+      <b key="average" className="text-ssindex-average">Average</b>,
+      <b key="good" className="text-ssindex-good">Good</b>,
+      <b key="excellent" className="text-ssindex-excellent">Excellent</b>,
     ],
     []
   );
 
   const DEFAULT_SCORE_LABELS = useMemo(
     () => [
-      <p key="0-19" className="text-gray-500 text-sm">[0-19]</p>,
-      <p key="20-39" className="text-gray-500 text-sm">[20-39]</p>,
-      <p key="40-59" className="text-gray-500 text-sm">[40-59]</p>,
-      <p key="60-79" className="text-gray-500 text-sm">[60-79]</p>,
-      <p key="80-100" className="text-gray-500 text-sm">[80-100]</p>,
+      <p key="0-19" className="text-secondary text-sm">[0-19]</p>,
+      <p key="20-39" className="text-secondary text-sm">[20-39]</p>,
+      <p key="40-59" className="text-secondary text-sm">[40-59]</p>,
+      <p key="60-79" className="text-secondary text-sm">[60-79]</p>,
+      <p key="80-100" className="text-secondary text-sm">[80-100]</p>,
     ],
     []
   );
@@ -71,22 +70,18 @@ export const GaugeChart: React.FC<GaugeChartProps> = ({
 
   // Render score display (numeric score and descriptive text)
   const renderScoreDisplay = () => (
-    <div className="flex justify-between items-center p-3">
-      <div className="text-blue-600">
+    <div className="flex justify-between items-center">
         <p className="m-0">
-          <span className="text-5xl font-bold">{score}</span>
-          <span className="text-gray-500 text-2xl"> / {maxValue}</span>
+          <span className={"text-4xl font-bold text-primary"}>{score}</span>
+          <span className="text-gray-500 text-l"> / {maxValue}</span>
         </p>
-      </div>
-      <div className="text-blue-600">
         {renderScoreText}
-      </div>
     </div>
   );
 
   // Render labels (above or below gradient bar)
   const renderLabels = (labelList: React.ReactNode[]) => (
-    <div className="flex justify-between w-full px-2">
+    <div className="flex justify-between w-full mt-5">
       {labelList.map((label, index) => (
         <span key={index} className="text-center flex-1">{label}</span>
       ))}
@@ -100,16 +95,13 @@ export const GaugeChart: React.FC<GaugeChartProps> = ({
       <div className="w-full relative mt-4 mb-4">
         {/* Gradient Bar */}
         <div
-          className="w-full h-6 rounded-full"
-          style={{
-            background: 'linear-gradient(to right, #ff4d4f, #ffeb3b 50%, #2196f3)',
-          }}
+          className='w-full h-6 rounded-full bg-gradient-to-r from-ssindex-poor via-ssindex-average to-ssindex-excellent'
         />
         {/* Score Marker */}
         <div
-          className="absolute border-4 border-gray-800 bg-white rounded-full"
+          className="absolute border-4 border-black bg-white rounded-full"
           style={{
-            top: '-12px', // Adjusted to sit above the thicker bar
+            top: '-3px',
             left: `${scorePosition}%`,
             transform: 'translateX(-50%)',
             width: '32px',
@@ -122,7 +114,7 @@ export const GaugeChart: React.FC<GaugeChartProps> = ({
 
   // Main render
   return (
-    <div className="text-center p-4 bg-gray-50 rounded-lg">
+    <div className="p-7">
       {renderScoreDisplay()}
       {renderLabels(textLabels)}
       {renderGradientBar()}
