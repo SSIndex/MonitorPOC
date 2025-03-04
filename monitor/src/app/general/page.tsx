@@ -3,7 +3,7 @@ import Link from 'next/link';
 import DatePickerYearly from '@/_components/datepicker';
 import Navbar from '@/_components/navbar';
 import GaugeChart from '@/_components/gauge_chart';
-import { UserTable } from '@/_components/usertable'
+import { Table } from '@/_components/table'
 import ExampleCard from '@/_components/card';
 
 
@@ -119,7 +119,7 @@ export default function GeneralAnalysis() {
             Stakeholders evaluate performance per SASB methodology.
           </p>
           <div className='bg-white rounded-lg shadow-md p-6'>
-            <UserTable />
+            <Table />
           </div>
         </section>
 

@@ -99,7 +99,7 @@ const dimensionColumns = [
 ];
 
 // Main component with parent table
-export function UserTable() {
+export function Table() {
   const table = useReactTable({
     data: dimensionData,
     columns: dimensionColumns,
