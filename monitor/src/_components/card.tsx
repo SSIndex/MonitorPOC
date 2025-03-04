@@ -1,11 +1,6 @@
 'use client';
 
 import React, { useMemo } from 'react';
-
-// Assuming these are separate components you’ve already translated or will mock
-// import { GaugeChart } from './GaugeChart'; // Placeholder for your gauge chart component
-// import { DatePickerYearly } from './DatePickerYearly'; // Placeholder for your date picker
-import GaugeChart from './gauge_chart';
 import ExampleGaugeChart from './gauge_chart';
 import DatePickerYearly from './datepicker';
 import clinicaMeds from '../../public/clinicaMeds.jpeg';
