@@ -9,7 +9,7 @@ export default function Navbar() {
     .toUpperCase()
     .slice(0, 2);
   return (
-    <nav className="bg-gray-800 text-white">
+    <nav className="bg-primary text-white">
       <div className="flex items-center justify-between p-4 max-w-7xl mx-auto">
         {/* Logo Section */}
         <div className="flex-shrink-0">
