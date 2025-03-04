@@ -4,7 +4,7 @@ import DatePickerYearly from '@/_components/datepicker';
 import Navbar from '@/_components/navbar';
 import GaugeChart from '@/_components/gauge_chart';
 import { UserTable } from '@/_components/usertable'
-import ExampleCard from '@/_components/example';
+import ExampleCard from '@/_components/card';
 
 
 // Main General Analysis Page
