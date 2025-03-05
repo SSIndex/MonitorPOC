@@ -1,11 +1,11 @@
-import Image from 'next/image';
+import Image from "next/image";
 
 export default function Navbar() {
   const userName = "José Miguel";
   const initials = userName
-    .split(' ')
-    .map(word => word[0])
-    .join('')
+    .split(" ")
+    .map((word) => word[0])
+    .join("")
     .toUpperCase()
     .slice(0, 2);
   return (
@@ -24,12 +24,24 @@ export default function Navbar() {
 
         {/* Navigation Links */}
         <div className="flex space-x-6 text-sm font-medium">
-          <a href="#" className="hover:text-gray-300 transition-colors">General</a>
-          <a href="#" className="hover:text-gray-300 transition-colors">SASB</a>
-          <a href="#" className="hover:text-gray-300 transition-colors">MAP</a>
-          <a href="#" className="hover:text-gray-300 transition-colors">Benchmarks</a>
-          <a href="#" className="hover:text-gray-300 transition-colors">Awards</a>
-          <a href="#" className="hover:text-gray-300 transition-colors">Time Trends</a>
+          <a href="#" className="hover:text-gray-300 transition-colors">
+            General
+          </a>
+          <a href="#" className="hover:text-gray-300 transition-colors">
+            SASB
+          </a>
+          <a href="#" className="hover:text-gray-300 transition-colors">
+            MAP
+          </a>
+          <a href="#" className="hover:text-gray-300 transition-colors">
+            Benchmarks
+          </a>
+          <a href="#" className="hover:text-gray-300 transition-colors">
+            Awards
+          </a>
+          <a href="#" className="hover:text-gray-300 transition-colors">
+            Time Trends
+          </a>
         </div>
 
         {/* User Session */}

@@ -1,6 +1,6 @@
-'use client';
+"use client";
 
-import React from 'react';
+import React from "react";
 import {
   Chart as ChartJS,
   RadialLinearScale,
@@ -9,8 +9,8 @@ import {
   Filler,
   Tooltip,
   Legend,
-} from 'chart.js';
-import { Radar } from 'react-chartjs-2';
+} from "chart.js";
+import { Radar } from "react-chartjs-2";
 
 // Register ChartJS components for radar chart
 ChartJS.register(
@@ -19,7 +19,7 @@ ChartJS.register(
   LineElement,
   Filler,
   Tooltip,
-  Legend
+  Legend,
 );
 
 interface RadarChartProps {
@@ -72,19 +72,19 @@ export const RadarChart: React.FC<RadarChartProps> = ({ data }) => {
 export const ExampleRadarChart: React.FC = () => {
   const chartData = {
     labels: [
-      'Environment',
-      'Social Capital',
-      'Human Capital',
-      'Business Model & Innovation',
-      'Leadership & Governance',
-      'Others',
+      "Environment",
+      "Social Capital",
+      "Human Capital",
+      "Business Model & Innovation",
+      "Leadership & Governance",
+      "Others",
     ],
     datasets: [
       {
         // label: 'Company ESG Performance',
         data: [75, 60, 85, 50, 70, 45],
-        backgroundColor: 'rgba(255, 255, 255, 0)',
-        borderColor: 'rgb(34, 40, 197)',
+        backgroundColor: "rgba(255, 255, 255, 0)",
+        borderColor: "rgb(34, 40, 197)",
         borderWidth: 2,
       },
     ],

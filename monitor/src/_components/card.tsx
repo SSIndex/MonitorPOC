@@ -1,10 +1,10 @@
-'use client';
+"use client";
 
-import React, { useMemo } from 'react';
-import ExampleGaugeChart from './gauge_chart';
-import DatePickerYearly from './datepicker';
-import clinicaMeds from '../../public/clinicaMeds.jpeg';
-import Image from 'next/image';
+import React, { useMemo } from "react";
+import ExampleGaugeChart from "./gauge_chart";
+import DatePickerYearly from "./datepicker";
+import clinicaMeds from "../../public/clinicaMeds.jpeg";
+import Image from "next/image";
 
 // Props interface for TypeScript typing
 interface CardProps {
@@ -20,7 +20,7 @@ interface CardProps {
   datePicker?: JSX.Element; // DatePickerYearly component render result
 }
 
-const DEFAULT_IMAGE = clinicaMeds
+const DEFAULT_IMAGE = clinicaMeds;
 // Card Component
 export const Card: React.FC<CardProps> = ({
   companyName,
@@ -30,25 +30,29 @@ export const Card: React.FC<CardProps> = ({
   overview,
   overviewGraph,
   companyImage = DEFAULT_IMAGE,
-  textColor = 'text-white',
-  backgroundColor = 'bg-ssindex-card-blue',
+  textColor = "text-white",
+  backgroundColor = "bg-ssindex-card-blue",
   datePicker,
 }) => {
   // Generate overview text based on overview score (equivalent to _generate_overview_text)
   const overviewText = useMemo(() => {
     const overviewMapping: { [key: string]: string } = {
-      Poor: ' This company holds a poor sentiment score. Feedback is mostly negative, with 80% of comments being negative and 20% positive. This indicates a negative perception among respondents',
-      Low: 'This company holds a low sentiment score. Feedback is mostly negative, with 60% of comments being negative and 40% positive. This indicates a negative perception among respondents',
-      Average: ' This company holds a medium sentiment score. Feedback is evenly split, with 50% of comments being positive and 50% negative. This indicates a balanced perception among respondents',
-      Good: ' This company holds a high sentiment score. Feedback is mostly positive, with 60% of comments being positive and 40% negative. This indicates a positive perception among respondents',
-      Excellent: ' This company holds a very high sentiment score. Feedback is overwhelmingly positive, with 80% of comments being positive and 20% negative. This indicates a very positive perception among respondents',
+      Poor: " This company holds a poor sentiment score. Feedback is mostly negative, with 80% of comments being negative and 20% positive. This indicates a negative perception among respondents",
+      Low: "This company holds a low sentiment score. Feedback is mostly negative, with 60% of comments being negative and 40% positive. This indicates a negative perception among respondents",
+      Average:
+        " This company holds a medium sentiment score. Feedback is evenly split, with 50% of comments being positive and 50% negative. This indicates a balanced perception among respondents",
+      Good: " This company holds a high sentiment score. Feedback is mostly positive, with 60% of comments being positive and 40% negative. This indicates a positive perception among respondents",
+      Excellent:
+        " This company holds a very high sentiment score. Feedback is overwhelmingly positive, with 80% of comments being positive and 20% negative. This indicates a very positive perception among respondents",
     };
-    return overviewMapping[overview] || '';
+    return overviewMapping[overview] || "";
   }, [overview]);
 
   return (
     <section>
-      <div className={`card rounded-md ps-7 pe-7 pb-7 ${backgroundColor} ${textColor}`}>
+      <div
+        className={`card rounded-md ps-7 pe-7 pb-7 ${backgroundColor} ${textColor}`}
+      >
         {/* Date Picker Section */}
         {datePicker && (
           <div className="flex justify-end pt-1 pe-5">{datePicker}</div>
@@ -60,14 +64,14 @@ export const Card: React.FC<CardProps> = ({
             {/* Left Column: Company Info and Overview */}
             <div className="flex-1">
               <div className="flex gap-4 items-center">
-                  <Image
-                    src={companyImage}
-                    alt="Company Image"
-                    width={158}
-                    height={158}
-                    className="rounded-full"
-                  />
-                <div className='flex flex-col gap-3'>
+                <Image
+                  src={companyImage}
+                  alt="Company Image"
+                  width={158}
+                  height={158}
+                  className="rounded-full"
+                />
+                <div className="flex flex-col gap-3">
                   <p className="text-2xl font-bold">{companyName}</p>
                   <p className="text-lg">
                     <span className="font-bold">Region: </span>
@@ -83,7 +87,7 @@ export const Card: React.FC<CardProps> = ({
                   </p>
                 </div>
               </div>
-              
+
               <div className="mt-7">
                 <p>
                   <span className="font-bold">Overview: {overview}. </span>
@@ -108,11 +112,11 @@ const ExampleCard: React.FC = () => {
 
   // Mock categorizeScore function
   const categorizeScore = (score: number): string => {
-    if (score < 20) return 'Poor';
-    if (score < 40) return 'Low';
-    if (score < 60) return 'Average';
-    if (score < 80) return 'Good';
-    return 'Excellent';
+    if (score < 20) return "Poor";
+    if (score < 40) return "Low";
+    if (score < 60) return "Average";
+    if (score < 80) return "Good";
+    return "Excellent";
   };
 
   return (
@@ -122,9 +126,7 @@ const ExampleCard: React.FC = () => {
       country="Chile"
       region="South America"
       overview={categorizeScore(generalScore)}
-      overviewGraph={
-        <ExampleGaugeChart/>
-      }
+      overviewGraph={<ExampleGaugeChart />}
       datePicker={<DatePickerYearly />}
     />
   );

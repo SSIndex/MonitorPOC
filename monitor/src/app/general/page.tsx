@@ -1,13 +1,12 @@
-import Image from 'next/image';
-import Link from 'next/link';
-import DatePickerYearly from '@/_components/datepicker';
-import Navbar from '@/_components/navbar';
-import GaugeChart from '@/_components/gauge_chart';
-import { Table } from '@/_components/table'
-import ExampleCard from '@/_components/card';
-import ExampleRadarChart from '@/_components/radar_chart';
-import ExampleBarChart from '@/_components/bar_chart';
-
+import Image from "next/image";
+import Link from "next/link";
+import DatePickerYearly from "@/_components/datepicker";
+import Navbar from "@/_components/navbar";
+import GaugeChart from "@/_components/gauge_chart";
+import { Table } from "@/_components/table";
+import ExampleCard from "@/_components/card";
+import ExampleRadarChart from "@/_components/radar_chart";
+import ExampleBarChart from "@/_components/bar_chart";
 
 // Main General Analysis Page
 export default function GeneralAnalysis() {
@@ -76,23 +75,39 @@ export default function GeneralAnalysis() {
             <div className="bg-secondary text-white p-6 rounded-lg">
               <h5 className="text-lg font-semibold">Percentile Analysis</h5>
               <p className="mt-2 text-md">
-                The result of the company in analysis is benchmarked with two groups of data:
+                The result of the company in analysis is benchmarked with two
+                groups of data:
               </p>
               <ol className="list-decimal ml-4 mt-2 space-y-1 text-md">
-                <li><strong>Global Universe</strong>: Sample of companies worldwide.</li>
-                <li><strong>Industry in Country</strong>: Same industry and country.</li>
+                <li>
+                  <strong>Global Universe</strong>: Sample of companies
+                  worldwide.
+                </li>
+                <li>
+                  <strong>Industry in Country</strong>: Same industry and
+                  country.
+                </li>
               </ol>
             </div>
             {/* Right Column - Table */}
             <div className="bg-white rounded-lg shadow-md p-6">
               {percentileData.map((item, index) => (
-                <div key={index} className="flex items-center space-x-4 py-2 border-b last:border-b-0">
-                  <div className={`${item.color} w-5 h-5 rounded-sm flex-shrink-0`}></div>
+                <div
+                  key={index}
+                  className="flex items-center space-x-4 py-2 border-b last:border-b-0"
+                >
+                  <div
+                    className={`${item.color} w-5 h-5 rounded-sm flex-shrink-0`}
+                  ></div>
                   <div className="flex-1">
                     <p className="font-bold text-gray-800">{item.label}</p>
-                    <p className="text-gray-600">{item.position} out of {item.total}</p>
+                    <p className="text-gray-600">
+                      {item.position} out of {item.total}
+                    </p>
                   </div>
-                  <p className="font-semibold text-gray-600">{item.percentile}</p>
+                  <p className="font-semibold text-gray-600">
+                    {item.percentile}
+                  </p>
                   <p className="text-gray-600">{item.rows}</p>
                 </div>
               ))}
@@ -101,25 +116,30 @@ export default function GeneralAnalysis() {
         </section>
 
         {/* Performance Analysis Section */}
-      <section className="pt-6">
-      <h4 className="text-xl font-bold text-primary">Performance Analysis</h4>
-      <p className="text-gray-600 mt-1">
-        The results are classified in a 5-category ratio and benchmarked with two groups.
-      </p>
-      <div className="mt-4 bg-light rounded-lg shadow-md p-6">
-        <div className="h-96 flex items-center justify-center">
-          <ExampleBarChart />
-        </div>
-      </div>
-    </section>
+        <section className="pt-6">
+          <h4 className="text-xl font-bold text-primary">
+            Performance Analysis
+          </h4>
+          <p className="text-gray-600 mt-1">
+            The results are classified in a 5-category ratio and benchmarked
+            with two groups.
+          </p>
+          <div className="mt-4 bg-light rounded-lg shadow-md p-6">
+            <div className="h-96 flex items-center justify-center">
+              <ExampleBarChart />
+            </div>
+          </div>
+        </section>
 
         {/* SASB Impact Analysis Section */}
         <section className="pt-6 mt-6">
-          <h4 className="text-xl font-bold text-primary">SASB Impact Analysis</h4>
+          <h4 className="text-xl font-bold text-primary">
+            SASB Impact Analysis
+          </h4>
           <p className="text-gray-600 mt-1">
             Stakeholders evaluate performance per SASB methodology.
           </p>
-          <div className='bg-white rounded-lg shadow-md p-6'>
+          <div className="bg-white rounded-lg shadow-md p-6">
             <Table />
           </div>
         </section>
@@ -149,7 +169,7 @@ export default function GeneralAnalysis() {
             </div>
             {/* Radar Chart Placeholder */}
             <div className="col-span-2 h-96 flex items-center justify-center">
-                <ExampleRadarChart />
+              <ExampleRadarChart />
             </div>
           </div>
         </section>
