@@ -3,6 +3,15 @@
 import React from 'react';
 import { useReactTable, getCoreRowModel, getExpandedRowModel } from '@tanstack/react-table';
 
+// Utility function to categorize score to Tailwind text color class
+export const categorizeScoreToBgClassName = (score: number): string => {
+  if (score < 20) return 'bg-ssindex-poor';
+  if (score < 40) return 'bg-ssindex-low';
+  if (score < 60) return 'bg-ssindex-average';
+  if (score < 80) return 'bg-ssindex-good';
+  return 'bg-ssindex-excellent';
+};
+
 // Sample data for the parent table (ESG Dimensions)
 const dimensionData = [
   {
@@ -36,6 +45,54 @@ const dimensionData = [
       { orderId: 'O3', item: 'Monitor', price: 300 },
     ],
   },
+  {
+    id: 3,
+    dimension: 'HUMAN CAPITAL',
+    noData: 2,
+    poor: 8,
+    low: 20,
+    average: 40,
+    good: 60,
+    excellent: 80,
+    score: 78,
+    percentile: 85,
+    orders: [
+      { orderId: 'O4', item: 'Keyboard', price: 50 },
+      { orderId: 'O5', item: 'Headphones', price: 100 },
+    ],
+  },
+  {
+    id: 4,
+    dimension: 'LEADERSHIP & GOVERNANCE',
+    noData: 0,
+    poor: 5,
+    low: 15,
+    average: 25,
+    good: 45,
+    excellent: 65,
+    score: 35,
+    percentile: 50,
+    orders: [
+      { orderId: 'O6', item: 'Chair', price: 150 },
+      { orderId: 'O7', item: 'Table', price: 200 },
+    ],
+  },
+  {
+   id: 5,
+   dimension: 'OTHERS',
+    noData: 0,
+    poor: 5,
+    low: 15,
+    average: 25,
+    good: 45,
+    excellent: 65,
+    score: 35,
+    percentile: 50,
+    orders: [
+      { orderId: 'O6', item: 'Chair', price: 150 },
+      { orderId: 'O7', item: 'Table', price: 200 },
+    ], 
+  }
 ];
 
 // Columns for the parent table
@@ -110,7 +167,7 @@ export function Table() {
 
   return (
     <div>
-      <table style={{ borderCollapse: 'collapse', width: '100%' }}>
+      <table className='table-fixed w-full border-collapse'>
         <thead>
           {table.getHeaderGroups().map(headerGroup => (
             <tr key={headerGroup.id}>
@@ -118,7 +175,7 @@ export function Table() {
                 
                 if (i === 0) {
                   return (
-                    <th key={header.id} className='bg-ssindex-table-header-gray text-primary rounded-l-lg' style={{ padding: '8px', textAlign: 'center' }}>
+                    <th key={header.id} className='bg-ssindex-table-header-gray text-primary rounded-l-lg w-10' style={{ padding: '8px', textAlign: 'center' }}>
                       {header.isPlaceholder ? null : header.column.columnDef.header}
                     </th>
                   )
@@ -126,7 +183,7 @@ export function Table() {
 
                 if (i === 1) {
                   return (
-                    <th key={header.id} className='bg-ssindex-table-header-gray text-primary' style={{ padding: '8px', textAlign: 'left' }}>
+                    <th key={header.id} className='bg-ssindex-table-header-gray text-primary w-50' style={{ padding: '8px', textAlign: 'left' }}>
                       {header.isPlaceholder ? null : header.column.columnDef.header}
                     </th>
                   )
@@ -159,14 +216,63 @@ export function Table() {
                 className={`hover:bg-neutral-200 ${row.getIsExpanded() ? 'bg-neutral-200' : 'bg-white'}`}
                 // style={{ cursor: 'pointer', background: row.getIsExpanded() ? '#f0f0f0' : 'white' }}
               >
-                {row.getVisibleCells().map((cell, i) => (
-                  <td key={cell.id} className={`p-4 text-primary ${ i === 1 ? 'text-left' : 'text-center' }`}>
-                    {/* {cell.column.columnDef.cell ? cell.renderCell() : cell.getValue()} */}
-                    <div>
-                      {cell.column.columnDef.cell ? cell.getValue() : cell.getValue()}
-                    </div>
-                  </td>
-                ))}
+                {row.getVisibleCells().map((cell, i) => {
+                  console.log('cell', cell);
+                  console.log('cell.column.id', cell.column.id);
+                  const columnId = cell.column.id;
+                  
+                  const value = cell.getValue();
+                  const commonClasses = 'pt-5 pb-5 ps-1 pe-1 text-primary';
+                  let backgroundColor = ""
+                  // if value is number, categorize it
+                  if (['noData', 'poor', 'low', 'average', 'good', 'excellent', 'score', 'percentile'].includes(columnId)) {
+                    if (columnId === 'noData') {
+                      backgroundColor = 'bg-ssindex-no-data';
+                    }
+                    else {
+                      backgroundColor = `${categorizeScoreToBgClassName(value)}`;
+                    }
+                  }
+
+                  const coloredCells = ['noData', 'poor', 'low', 'average', 'good', 'excellent'];
+
+                  if (coloredCells.includes(columnId)) {
+                    return (
+                      <td key={cell.id} className={`${commonClasses} ${ i === 1 ? 'text-left' : 'text-center' }`}>
+                        <div className={`${backgroundColor} border-3 border-dark  w-full h-full`}>
+                        {'\u200B'}
+                        </div> 
+                      </td>
+                    )
+                  }
+
+                  switch (columnId) {
+                    case 'score':
+                      return (
+                        <td key={cell.id} className={`${commonClasses} text-white font-bold ${ i === 1 ? 'text-left' : 'text-center' }`}>
+                          <div className={`${backgroundColor} rounded-sm w-full h-full`}>
+                            {`${value}%`}
+                          </div>
+                        </td>
+                      )
+                    case 'percentile':
+                      return (
+                        <td key={cell.id} className={`${commonClasses} text-white font-bold ${ i === 1 ? 'text-left' : 'text-center' }`}>
+                          <div className={`${backgroundColor} rounded-sm w-full h-full`}>
+                            {`${value}th`}
+                          </div>
+                        </td>
+                      )
+                    default:
+                      return (
+                        <td key={cell.id} className={`${commonClasses} text-primary ${ i === 1 ? 'text-left' : 'text-center' }`}>
+                          <div className={`${backgroundColor} w-full h-full`}>
+                            {value}
+                          </div>
+                        </td>
+                      )
+                  }
+                })}
               </tr>
               {row.getIsExpanded() && (
                 <tr>
