@@ -6,7 +6,9 @@
     "dev": "next dev --turbopack",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "format": "prettier --write .",
+    "lint:fix": "next lint --fix && prettier --write ."
   },
   "dependencies": {
     "@tanstack/react-table": "^8.21.2",
