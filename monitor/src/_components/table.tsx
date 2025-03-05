@@ -5,19 +5,34 @@ import {
   useReactTable,
   getCoreRowModel,
   getExpandedRowModel,
+  ColumnDef,
+  Header,
 } from "@tanstack/react-table";
+import { categorizeScoreToBgClassName } from "@/_utils/classNameUtils";
 
-// Utility function to categorize score to Tailwind text color class
-export const categorizeScoreToBgClassName = (score: number): string => {
-  if (score < 20) return "bg-ssindex-poor";
-  if (score < 40) return "bg-ssindex-low";
-  if (score < 60) return "bg-ssindex-average";
-  if (score < 80) return "bg-ssindex-good";
-  return "bg-ssindex-excellent";
-};
+// Define types for table data
+interface Order {
+  orderId: string;
+  item: string;
+  price: number;
+}
 
-// Sample data for the parent table (ESG Dimensions)
-const dimensionData = [
+interface DimensionRow {
+  id: number;
+  dimension: string;
+  noData: boolean;
+  poor: boolean;
+  low: boolean;
+  average: boolean;
+  good: boolean;
+  excellent: boolean;
+  score: number;
+  percentile: number;
+  orders: Order[];
+}
+
+// Sample data
+const dimensionData: DimensionRow[] = [
   {
     id: 1,
     dimension: "ENVIRONMENT",
@@ -25,7 +40,7 @@ const dimensionData = [
     poor: false,
     low: false,
     average: false,
-    good: true, // Score 62 falls in 60-79%
+    good: true,
     excellent: false,
     score: 62,
     percentile: 75,
@@ -40,7 +55,7 @@ const dimensionData = [
     noData: false,
     poor: false,
     low: false,
-    average: true, // Score 45 falls in 40-59%
+    average: true,
     good: false,
     excellent: false,
     score: 45,
@@ -54,7 +69,7 @@ const dimensionData = [
     poor: false,
     low: false,
     average: false,
-    good: true, // Score 78 falls in 60-79%
+    good: true,
     excellent: false,
     score: 78,
     percentile: 85,
@@ -68,7 +83,7 @@ const dimensionData = [
     dimension: "LEADERSHIP & GOVERNANCE",
     noData: false,
     poor: false,
-    low: true, // Score 35 falls in 20-39%
+    low: true,
     average: false,
     good: false,
     excellent: false,
@@ -84,7 +99,7 @@ const dimensionData = [
     dimension: "OTHERS",
     noData: false,
     poor: false,
-    low: true, // Score 35 falls in 20-39%
+    low: true,
     average: false,
     good: false,
     excellent: false,
@@ -97,8 +112,8 @@ const dimensionData = [
   },
 ];
 
-// Columns for the parent table
-const dimensionColumns = [
+// Column definitions with proper typing
+const dimensionColumns: ColumnDef<DimensionRow>[] = [
   { header: "#", accessorKey: "id" },
   { header: "Dimension", accessorKey: "dimension" },
   {
@@ -173,83 +188,139 @@ const dimensionColumns = [
   },
 ];
 
-// Main component with parent table
+// Constants for common styles
+const COMMON_CELL_CLASSES = "pt-5 pb-5 ps-1 pe-1 text-primary h-20";
+const HEADER_BASE_CLASSES = "bg-ssindex-table-header-gray text-primary";
+const COLORED_CELLS = ["noData", "poor", "low", "average", "good", "excellent"];
+
+// Helper function to get background color based on column ID
+const getBackgroundColorForColumn = (columnId: string): string => {
+  switch (columnId) {
+    case "noData":
+      return "bg-ssindex-no-data";
+    case "poor":
+      return "bg-ssindex-poor";
+    case "low":
+      return "bg-ssindex-low";
+    case "average":
+      return "bg-ssindex-average";
+    case "good":
+      return "bg-ssindex-good";
+    case "excellent":
+      return "bg-ssindex-excellent";
+    default:
+      return "";
+  }
+};
+
+// Main Table Component
 export function Table() {
   const table = useReactTable({
     data: dimensionData,
     columns: dimensionColumns,
     getCoreRowModel: getCoreRowModel(),
     getExpandedRowModel: getExpandedRowModel(),
-    getRowCanExpand: () => true, // All rows can expand
+    getRowCanExpand: () => true,
   });
 
   const totalScore = Math.round(
     dimensionData.reduce((sum, row) => sum + row.score, 0) /
-      dimensionData.length
+      dimensionData.length,
   );
   const totalPercentile = Math.round(
     dimensionData.reduce((sum, row) => sum + row.percentile, 0) /
-      dimensionData.length
+      dimensionData.length,
   );
+
+  // Helper function to render header cells
+  const renderHeaderCell = (
+    header: Header<DimensionRow, unknown>,
+    index: number,
+  ) => {
+    const isFirst = index === 0;
+    const isSecond = index === 1;
+    const isLast = index === table.getHeaderGroups()[0].headers.length - 1;
+    const className = `${HEADER_BASE_CLASSES} ${isFirst ? "rounded-l-lg w-10" : ""} ${isSecond ? "w-50" : ""} ${isLast ? "rounded-r-lg" : ""}`;
+    const textAlign = isSecond ? "text-left" : "text-center";
+
+    return (
+      <th
+        key={header.id}
+        className={`${className} ${textAlign}`}
+        style={{ padding: "8px" }}
+      >
+        {header.isPlaceholder ? null : header.column.columnDef.header}
+      </th>
+    );
+  };
+
+  // Helper function to render data cells
+  const renderDataCell = (cell: any, index: number) => {
+    const columnId = cell.column.id;
+    const value = cell.getValue() as string | number | boolean;
+    const isSecondColumn = index === 1;
+    const justifyAlignClass = isSecondColumn
+      ? "justify-left"
+      : "justify-center";
+
+    if (COLORED_CELLS.includes(columnId)) {
+      const backgroundColor = getBackgroundColorForColumn(columnId);
+      const opacityClass = value ? "opacity-100" : "opacity-30";
+      return (
+        <td
+          key={cell.id}
+          className={`${COMMON_CELL_CLASSES} ${justifyAlignClass}`}
+        >
+          <div
+            className={`${backgroundColor} ${opacityClass} border-3 border-dark w-full h-full flex items-center justify-center`}
+          >
+            {"\u200B"}
+          </div>
+        </td>
+      );
+    }
+
+    let backgroundColor = "";
+    if (["score", "percentile"].includes(columnId)) {
+      backgroundColor = categorizeScoreToBgClassName(Number(value));
+    }
+
+    switch (columnId) {
+      case "score":
+      case "percentile":
+        return (
+          <td
+            key={cell.id}
+            className={`${COMMON_CELL_CLASSES} text-white font-bold`}
+          >
+            <div
+              className={`${backgroundColor} rounded-sm w-full h-full flex ${justifyAlignClass} items-center`}
+            >
+              {columnId === "score" ? `${value}%` : `${value}th`}
+            </div>
+          </td>
+        );
+      default:
+        return (
+          <td key={cell.id} className={`${COMMON_CELL_CLASSES}`}>
+            <div
+              className={`${backgroundColor} w-full h-full flex ${justifyAlignClass} items-center`}
+            >
+              {value}
+            </div>
+          </td>
+        );
+    }
+  };
 
   return (
     <table className="table-fixed w-full border-collapse">
       <thead>
         {table.getHeaderGroups().map((headerGroup) => (
           <tr key={headerGroup.id}>
-            {headerGroup.headers.map((header, i) => {
-              if (i === 0) {
-                return (
-                  <th
-                    key={header.id}
-                    className="bg-ssindex-table-header-gray text-primary rounded-l-lg w-10"
-                    style={{ padding: "8px", textAlign: "center" }}
-                  >
-                    {header.isPlaceholder
-                      ? null
-                      : header.column.columnDef.header}
-                  </th>
-                );
-              }
-
-              if (i === 1) {
-                return (
-                  <th
-                    key={header.id}
-                    className="bg-ssindex-table-header-gray text-primary w-50"
-                    style={{ padding: "8px", textAlign: "left" }}
-                  >
-                    {header.isPlaceholder
-                      ? null
-                      : header.column.columnDef.header}
-                  </th>
-                );
-              } else if (i === headerGroup.headers.length - 1) {
-                return (
-                  <th
-                    key={header.id}
-                    className="bg-ssindex-table-header-gray text-primary rounded-r-lg"
-                    style={{ padding: "8px", textAlign: "center" }}
-                  >
-                    {header.isPlaceholder
-                      ? null
-                      : header.column.columnDef.header}
-                  </th>
-                );
-              } else {
-                return (
-                  <th
-                    key={header.id}
-                    className="bg-ssindex-table-header-gray text-primary"
-                    style={{ padding: "8px", textAlign: "center" }}
-                  >
-                    {header.isPlaceholder
-                      ? null
-                      : header.column.columnDef.header}
-                  </th>
-                );
-              }
-            })}
+            {headerGroup.headers.map((header, i) =>
+              renderHeaderCell(header, i),
+            )}
           </tr>
         ))}
       </thead>
@@ -259,127 +330,8 @@ export function Table() {
             <tr
               onClick={row.getToggleExpandedHandler()}
               className={`hover:bg-neutral-200 ${row.getIsExpanded() ? "bg-neutral-200" : "bg-white"}`}
-              // style={{ cursor: 'pointer', background: row.getIsExpanded() ? '#f0f0f0' : 'white' }}
             >
-              {row.getVisibleCells().map((cell, i) => {
-                console.log("cell", cell);
-                console.log("cell.column.id", cell.column.id);
-                const columnId = cell.column.id;
-
-                const value = cell.getValue();
-                const commonClasses =
-                  "pt-5 pb-5 ps-1 pe-1 text-primary h-20 text-center";
-                let backgroundColor = "";
-                // if value is number, categorize it
-                if (
-                  [
-                    "noData",
-                    "poor",
-                    "low",
-                    "average",
-                    "good",
-                    "excellent",
-                    "score",
-                    "percentile",
-                  ].includes(columnId)
-                ) {
-                  if (columnId === "noData") {
-                    backgroundColor = "bg-ssindex-no-data";
-                  } else {
-                    backgroundColor = `${categorizeScoreToBgClassName(value)}`;
-                  }
-                }
-                const opacityClass = (value as boolean)
-                  ? "opacity-100"
-                  : "opacity-30";
-                const coloredCells = [
-                  "noData",
-                  "poor",
-                  "low",
-                  "average",
-                  "good",
-                  "excellent",
-                ];
-
-                if (coloredCells.includes(columnId)) {
-                  // Determine background color based on columnId
-                  switch (columnId) {
-                    case "noData":
-                      backgroundColor = "bg-ssindex-no-data";
-                      break;
-                    case "poor":
-                      backgroundColor = "bg-ssindex-poor";
-                      break;
-                    case "low":
-                      backgroundColor = "bg-ssindex-low";
-                      break;
-                    case "average":
-                      backgroundColor = "bg-ssindex-average";
-                      break;
-                    case "good":
-                      backgroundColor = "bg-ssindex-good";
-                      break;
-                    case "excellent":
-                      backgroundColor = "bg-ssindex-excellent";
-                      break;
-                  }
-                }
-
-                if (coloredCells.includes(columnId)) {
-                  return (
-                    <td
-                      key={cell.id}
-                      className={`${commonClasses} ${i === 1 ? "text-left" : "text-center"}`}
-                    >
-                      <div
-                        className={`${backgroundColor} ${opacityClass} flex align-items-center border-3 border-dark  w-full h-full`}
-                      >
-                        {"\u200B"}
-                      </div>
-                    </td>
-                  );
-                }
-
-                switch (columnId) {
-                  case "score":
-                    return (
-                      <td
-                        key={cell.id}
-                        className={`${commonClasses} text-white font-bold ${i === 1 ? "text-left" : "text-center"}`}
-                      >
-                        <div
-                          className={`${backgroundColor} rounded-sm w-full h-full flex items-center justify-center`}
-                        >
-                          {`${value}%`}
-                        </div>
-                      </td>
-                    );
-                  case "percentile":
-                    return (
-                      <td
-                        key={cell.id}
-                        className={`${commonClasses} text-white font-bold ${i === 1 ? "text-left" : "text-center"}`}
-                      >
-                        <div
-                          className={`${backgroundColor} rounded-sm w-full h-full flex items-center justify-center`}
-                        >
-                          {`${value}th`}
-                        </div>
-                      </td>
-                    );
-                  default:
-                    return (
-                      <td
-                        key={cell.id}
-                        className={`${commonClasses} text-primary ${i === 1 ? "text-left" : "text-center"}`}
-                      >
-                        <div className={`${backgroundColor} w-full h-full `}>
-                          {value}
-                        </div>
-                      </td>
-                    );
-                }
-              })}
+              {row.getVisibleCells().map((cell, i) => renderDataCell(cell, i))}
             </tr>
             {row.getIsExpanded() && (
               <tr>
@@ -393,29 +345,26 @@ export function Table() {
             )}
           </React.Fragment>
         ))}
-
         {/* Footer Row */}
         <tr className="border-t-1 font-bold border-gray-300">
-          <td className="pt-5 pb-5 ps-1 pe-1 text-primary h-20 text-center"></td>
-          <td className="pt-5 pb-5 ps-1 pe-1 text-primary h-20 text-left">
-            Total Score
-          </td>
-          <td className="pt-5 pb-5 ps-1 pe-1 text-primary h-20 text-center"></td>
-          <td className="pt-5 pb-5 ps-1 pe-1 text-primary h-20 text-center"></td>
-          <td className="pt-5 pb-5 ps-1 pe-1 text-primary h-20 text-center"></td>
-          <td className="pt-5 pb-5 ps-1 pe-1 text-primary h-20 text-center"></td>
-          <td className="pt-5 pb-5 ps-1 pe-1 text-primary h-20 text-center"></td>
-          <td className="pt-5 pb-5 ps-1 pe-1 text-primary h-20 text-center"></td>
-          <td className="pt-5 pb-5 ps-1 pe-1 text-primary h-20 text-center">
+          <td className={COMMON_CELL_CLASSES}></td>
+          <td className={`${COMMON_CELL_CLASSES} text-left`}>Total Score</td>
+          <td className={COMMON_CELL_CLASSES}></td>
+          <td className={COMMON_CELL_CLASSES}></td>
+          <td className={COMMON_CELL_CLASSES}></td>
+          <td className={COMMON_CELL_CLASSES}></td>
+          <td className={COMMON_CELL_CLASSES}></td>
+          <td className={COMMON_CELL_CLASSES}></td>
+          <td className={`${COMMON_CELL_CLASSES} text-white font-bold`}>
             <div
-              className={`${categorizeScoreToBgClassName(totalScore)} rounded-sm w-full h-full flex items-center justify-center text-white`}
+              className={`${categorizeScoreToBgClassName(totalScore)} rounded-sm w-full h-full flex items-center justify-center`}
             >
               {`${totalScore}%`}
             </div>
           </td>
-          <td className="pt-5 pb-5 ps-1 pe-1 text-primary h-20 text-center">
+          <td className={`${COMMON_CELL_CLASSES} text-white font-bold`}>
             <div
-              className={`${categorizeScoreToBgClassName(totalPercentile)} rounded-sm w-full h-full flex items-center justify-center text-white`}
+              className={`${categorizeScoreToBgClassName(totalPercentile)} rounded-sm w-full h-full flex items-center justify-center`}
             >
               {`${totalPercentile}th`}
             </div>
@@ -426,9 +375,9 @@ export function Table() {
   );
 }
 
-// Nested table component for orders (unchanged)
-function NestedOrderTable({ orders }) {
-  const orderColumns = [
+// Nested Table Component
+function NestedOrderTable({ orders }: { orders: Order[] }) {
+  const orderColumns: ColumnDef<Order>[] = [
     { header: "Order ID", accessorKey: "orderId" },
     { header: "Item", accessorKey: "item" },
     { header: "Price ($)", accessorKey: "price" },
@@ -461,7 +410,6 @@ function NestedOrderTable({ orders }) {
             </tr>
           ))}
         </thead>
-
         <tbody>
           {table.getRowModel().rows.map((row) => (
             <tr key={row.id}>
