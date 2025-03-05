@@ -5,6 +5,7 @@ import Navbar from '@/_components/navbar';
 import GaugeChart from '@/_components/gauge_chart';
 import { Table } from '@/_components/table'
 import ExampleCard from '@/_components/card';
+import ExampleRadarChart from '@/_components/radar_chart';
 
 
 // Main General Analysis Page
@@ -147,8 +148,8 @@ export default function GeneralAnalysis() {
               </table>
             </div>
             {/* Radar Chart Placeholder */}
-            <div className="col-span-2 h-96 bg-gray-200 flex items-center justify-center">
-              <p className="text-gray-500">[Radar Chart Placeholder]</p>
+            <div className="col-span-2 h-96 flex items-center justify-center">
+                <ExampleRadarChart />
             </div>
           </div>
         </section>
