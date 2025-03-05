@@ -6,6 +6,7 @@ import GaugeChart from '@/_components/gauge_chart';
 import { Table } from '@/_components/table'
 import ExampleCard from '@/_components/card';
 import ExampleRadarChart from '@/_components/radar_chart';
+import ExampleBarChart from '@/_components/bar_chart';
 
 
 // Main General Analysis Page
@@ -100,18 +101,17 @@ export default function GeneralAnalysis() {
         </section>
 
         {/* Performance Analysis Section */}
-        <section className="pt-6">
-          <h4 className="text-xl font-bold text-primary">Performance Analysis</h4>
-          <p className="text-gray-600 mt-1">
-            The results are classified in a 5-category ratio and benchmarked with two groups.
-          </p>
-          <div className="mt-4 bg-white rounded-lg shadow-md p-6">
-            {/* Placeholder for Histogram */}
-            <div className="h-96 bg-gray-200 flex items-center justify-center">
-              <p className="text-gray-500">[Bar Chart Placeholder]</p>
-            </div>
-          </div>
-        </section>
+      <section className="pt-6">
+      <h4 className="text-xl font-bold text-primary">Performance Analysis</h4>
+      <p className="text-gray-600 mt-1">
+        The results are classified in a 5-category ratio and benchmarked with two groups.
+      </p>
+      <div className="mt-4 bg-light rounded-lg shadow-md p-6">
+        <div className="h-96 flex items-center justify-center">
+          <ExampleBarChart />
+        </div>
+      </div>
+    </section>
 
         {/* SASB Impact Analysis Section */}
         <section className="pt-6 mt-6">
