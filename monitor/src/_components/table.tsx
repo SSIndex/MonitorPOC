@@ -183,6 +183,13 @@ export function Table() {
     getRowCanExpand: () => true, // All rows can expand
   });
 
+  const totalScore = Math.round(
+    dimensionData.reduce((sum, row) => sum + row.score, 0) / dimensionData.length
+  );
+  const totalPercentile = Math.round(
+    dimensionData.reduce((sum, row) => sum + row.percentile, 0) / dimensionData.length
+  );
+
   return (
     <div>
       <table className="table-fixed w-full border-collapse">
@@ -385,6 +392,32 @@ export function Table() {
               )}
             </React.Fragment>
           ))}
+
+          {/* Footer Row */}
+          <tr className="border-t-1 font-bold border-gray-300">
+            <td className="pt-5 pb-5 ps-1 pe-1 text-primary h-20 text-center"></td>
+            <td className="pt-5 pb-5 ps-1 pe-1 text-primary h-20 text-left">Total Score</td>
+            <td className="pt-5 pb-5 ps-1 pe-1 text-primary h-20 text-center"></td>
+            <td className="pt-5 pb-5 ps-1 pe-1 text-primary h-20 text-center"></td>
+            <td className="pt-5 pb-5 ps-1 pe-1 text-primary h-20 text-center"></td>
+            <td className="pt-5 pb-5 ps-1 pe-1 text-primary h-20 text-center"></td>
+            <td className="pt-5 pb-5 ps-1 pe-1 text-primary h-20 text-center"></td>
+            <td className="pt-5 pb-5 ps-1 pe-1 text-primary h-20 text-center"></td>
+            <td className="pt-5 pb-5 ps-1 pe-1 text-primary h-20 text-center">
+              <div
+                className={`${categorizeScoreToBgClassName(totalScore)} rounded-sm w-full h-full flex items-center justify-center text-white`}
+              >
+                {`${totalScore}%`}
+              </div>
+            </td>
+            <td className="pt-5 pb-5 ps-1 pe-1 text-primary h-20 text-center">
+              <div
+                className={`${categorizeScoreToBgClassName(totalPercentile)} rounded-sm w-full h-full flex items-center justify-center text-white`}
+              >
+                {`${totalPercentile}th`}
+              </div>
+            </td>
+          </tr>
         </tbody>
       </table>
     </div>
