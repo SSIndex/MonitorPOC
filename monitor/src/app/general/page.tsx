@@ -120,7 +120,7 @@ export default function GeneralAnalysis() {
           <h4 className="text-xl font-bold text-primary">
             Performance Analysis
           </h4>
-          <p className="text-gray-600 mt-1">
+          <p className="text-gray-600 mt-2">
             The results are classified in a 5-category ratio and benchmarked
             with two groups.
           </p>
@@ -136,10 +136,11 @@ export default function GeneralAnalysis() {
           <h4 className="text-xl font-bold text-primary">
             SASB Impact Analysis
           </h4>
-          <p className="text-gray-600 mt-1">
-            Stakeholders evaluate performance per SASB methodology.
+          <p className="text-ssindex-graph-grey mt-2">
+            Stakeholders evaluate how the company is performing according to the
+            Sustainability Accounting Standards Board (SASB) methodology
           </p>
-          <div className="bg-white rounded-lg shadow-md p-6">
+          <div className="bg-white rounded-lg shadow-md mt-4 p-6">
             <Table />
           </div>
         </section>
