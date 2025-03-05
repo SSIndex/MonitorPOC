@@ -15,14 +15,14 @@ export const categorizeScoreToBgClassName = (score: number): string => {
 // Sample data for the parent table (ESG Dimensions)
 const dimensionData = [
   {
-    id:1,
+    id: 1,
     dimension: 'ENVIRONMENT',
-    noData: 5,
-    poor: 15,
-    low: 25,
-    average: 45,
-    good: 65,
-    excellent: 85,
+    noData: false,
+    poor: false,
+    low: false,
+    average: false,
+    good: true,  // Score 62 falls in 60-79%
+    excellent: false,
     score: 62,
     percentile: 75,
     orders: [
@@ -33,12 +33,12 @@ const dimensionData = [
   {
     id: 2,
     dimension: 'SOCIAL CAPITAL',
-    noData: 10,
-    poor: 18,
-    low: 30,
-    average: 50,
-    good: 70,
-    excellent: 90,
+    noData: false,
+    poor: false,
+    low: false,
+    average: true,  // Score 45 falls in 40-59%
+    good: false,
+    excellent: false,
     score: 45,
     percentile: 60,
     orders: [
@@ -48,12 +48,12 @@ const dimensionData = [
   {
     id: 3,
     dimension: 'HUMAN CAPITAL',
-    noData: 2,
-    poor: 8,
-    low: 20,
-    average: 40,
-    good: 60,
-    excellent: 80,
+    noData: false,
+    poor: false,
+    low: false,
+    average: false,
+    good: true,  // Score 78 falls in 60-79%
+    excellent: false,
     score: 78,
     percentile: 85,
     orders: [
@@ -64,12 +64,12 @@ const dimensionData = [
   {
     id: 4,
     dimension: 'LEADERSHIP & GOVERNANCE',
-    noData: 0,
-    poor: 5,
-    low: 15,
-    average: 25,
-    good: 45,
-    excellent: 65,
+    noData: false,
+    poor: false,
+    low: true,  // Score 35 falls in 20-39%
+    average: false,
+    good: false,
+    excellent: false,
     score: 35,
     percentile: 50,
     orders: [
@@ -78,21 +78,21 @@ const dimensionData = [
     ],
   },
   {
-   id: 5,
-   dimension: 'OTHERS',
-    noData: 0,
-    poor: 5,
-    low: 15,
-    average: 25,
-    good: 45,
-    excellent: 65,
+    id: 5,
+    dimension: 'OTHERS',
+    noData: false,
+    poor: false,
+    low: true,  // Score 35 falls in 20-39%
+    average: false,
+    good: false,
+    excellent: false,
     score: 35,
     percentile: 50,
     orders: [
       { orderId: 'O6', item: 'Chair', price: 150 },
       { orderId: 'O7', item: 'Table', price: 200 },
-    ], 
-  }
+    ],
+  },
 ];
 
 // Columns for the parent table
@@ -222,7 +222,7 @@ export function Table() {
                   const columnId = cell.column.id;
                   
                   const value = cell.getValue();
-                  const commonClasses = 'pt-5 pb-5 ps-1 pe-1 text-primary';
+                  const commonClasses = 'pt-5 pb-5 ps-1 pe-1 text-primary h-20 text-center';
                   let backgroundColor = ""
                   // if value is number, categorize it
                   if (['noData', 'poor', 'low', 'average', 'good', 'excellent', 'score', 'percentile'].includes(columnId)) {
@@ -233,13 +233,37 @@ export function Table() {
                       backgroundColor = `${categorizeScoreToBgClassName(value)}`;
                     }
                   }
-
+                  const opacityClass = (value as boolean) ? 'opacity-100' : 'opacity-30';
                   const coloredCells = ['noData', 'poor', 'low', 'average', 'good', 'excellent'];
+                  
+                  if (coloredCells.includes(columnId)) {
+                    // Determine background color based on columnId
+                    switch (columnId) {
+                      case 'noData':
+                        backgroundColor = 'bg-ssindex-no-data';
+                        break;
+                      case 'poor':
+                        backgroundColor = 'bg-ssindex-poor';
+                        break;
+                      case 'low':
+                        backgroundColor = 'bg-ssindex-low';
+                        break;
+                      case 'average':
+                        backgroundColor = 'bg-ssindex-average';
+                        break;
+                      case 'good':
+                        backgroundColor = 'bg-ssindex-good';
+                        break;
+                      case 'excellent':
+                        backgroundColor = 'bg-ssindex-excellent';
+                        break;
+                    }
+                  }
 
                   if (coloredCells.includes(columnId)) {
                     return (
                       <td key={cell.id} className={`${commonClasses} ${ i === 1 ? 'text-left' : 'text-center' }`}>
-                        <div className={`${backgroundColor} border-3 border-dark  w-full h-full`}>
+                        <div className={`${backgroundColor} ${opacityClass} flex align-items-center border-3 border-dark  w-full h-full`}>
                         {'\u200B'}
                         </div> 
                       </td>
@@ -250,7 +274,7 @@ export function Table() {
                     case 'score':
                       return (
                         <td key={cell.id} className={`${commonClasses} text-white font-bold ${ i === 1 ? 'text-left' : 'text-center' }`}>
-                          <div className={`${backgroundColor} rounded-sm w-full h-full`}>
+                          <div className={`${backgroundColor} rounded-sm w-full h-full flex items-center justify-center`}>
                             {`${value}%`}
                           </div>
                         </td>
@@ -258,7 +282,7 @@ export function Table() {
                     case 'percentile':
                       return (
                         <td key={cell.id} className={`${commonClasses} text-white font-bold ${ i === 1 ? 'text-left' : 'text-center' }`}>
-                          <div className={`${backgroundColor} rounded-sm w-full h-full`}>
+                          <div className={`${backgroundColor} rounded-sm w-full h-full flex items-center justify-center`}>
                             {`${value}th`}
                           </div>
                         </td>
@@ -266,7 +290,7 @@ export function Table() {
                     default:
                       return (
                         <td key={cell.id} className={`${commonClasses} text-primary ${ i === 1 ? 'text-left' : 'text-center' }`}>
-                          <div className={`${backgroundColor} w-full h-full`}>
+                          <div className={`${backgroundColor} w-full h-full `}>
                             {value}
                           </div>
                         </td>
