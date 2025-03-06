@@ -63,7 +63,7 @@ export const RadarChart: React.FC<RadarChartProps> = ({ data }) => {
   };
 
   return (
-    <div className="w-full h-full p-4 bg-white rounded-lg shadow-md">
+    <div className="w-full h-full p-4 bg-white rounded-lg">
       <Radar data={data} options={options} />
     </div>
   );
