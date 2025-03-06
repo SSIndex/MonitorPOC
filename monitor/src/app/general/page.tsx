@@ -8,6 +8,20 @@ import ExampleCard from "@/_components/card";
 import ExampleRadarChart from "@/_components/radar_chart";
 import ExampleBarChart from "@/_components/bar_chart";
 
+const sasbRadarChartColumnData = [
+  { header: "#", accessorKey: "id" },
+  { header: "Dimension", accessorKey: "category" },
+  { header: "Score", accessorKey: "scoreColor" },
+];
+
+const sasbRadarChartTableData = [
+  { id: 1, category: "Environment", scoreColor: "80" },
+  { id: 2, category: "Social Capital", scoreColor: "70" },
+  { id: 3, category: "Human Capital", scoreColor: "85" },
+  { id: 4, category: "Leadership & Governance", scoreColor: "60" },
+  { id: 5, category: "Others", scoreColor: "60" },
+];
+
 // Sample data
 const dimensionData: DimensionRow[] = [
   {
@@ -303,6 +317,7 @@ export default function GeneralAnalysis() {
                 columns={percentileDataColumns}
                 centerSecondLeft={false}
                 footer={false}
+                backgroundColor="bg-white"
               />
             </div>
           </div>
@@ -334,12 +349,13 @@ export default function GeneralAnalysis() {
             Sustainability Accounting Standards Board (SASB) methodology
           </p>
           <div className="bg-white rounded-lg shadow-md mt-4 p-6">
-            <h5 className="ps-1 pb-5 text-primary">Overall Score SASB</h5>
+            <h5 className="ps-1 text-primary">Overall Score SASB</h5>
             <Table
               data={dimensionData}
               columns={dimensionColumns}
               centerSecondLeft={true}
               footer={true}
+              backgroundColor="bg-white"
             />
           </div>
         </section>
@@ -349,23 +365,14 @@ export default function GeneralAnalysis() {
           <h4 className="text-xl font-bold text-primary">SASB Radar Chart</h4>
           <div className="mt-4 bg-white rounded-lg shadow-md p-6 grid grid-cols-1 md:grid-cols-3 gap-6">
             {/* Table */}
-            <div className="col-span-1">
-              <table className="w-full text-left">
-                <thead>
-                  <tr className="bg-gray-200">
-                    <th className="p-3">Category</th>
-                    <th className="p-3">Score</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {sasbTableData.map((row, index) => (
-                    <tr key={index} className="border-b">
-                      <td className="p-3">{row.category}</td>
-                      <td className="p-3">{row.score}</td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
+            <div className="col-span-1 ">
+              <Table
+                data={sasbRadarChartTableData}
+                columns={sasbRadarChartColumnData}
+                centerSecondLeft={true}
+                footer={false}
+                backgroundColor="bg-ssindex-nested-table-background"
+              />
             </div>
             {/* Radar Chart Placeholder */}
             <div className="col-span-2 h-96 flex items-center justify-center">

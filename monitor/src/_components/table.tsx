@@ -60,6 +60,7 @@ const getBackgroundColorForColumn = (columnId: string): string => {
 interface TableProps {
   data?: DimensionRow[];
   columns?: ColumnDef<DimensionRow>[];
+  backgroundColor?: string;
   centerSecondLeft?: boolean;
   footer?: boolean;
 }
@@ -68,6 +69,7 @@ interface TableProps {
 export function Table({
   data,
   columns,
+  backgroundColor = "bg-white",
   centerSecondLeft = false,
   footer,
 }: TableProps) {
@@ -164,69 +166,77 @@ export function Table({
   };
 
   return (
-    <table className="table-fixed w-full border-collapse">
-      <thead>
-        {table.getHeaderGroups().map((headerGroup) => (
-          <tr key={headerGroup.id}>
-            {headerGroup.headers.map((header, i) =>
-              renderHeaderCell(header, i),
-            )}
-          </tr>
-        ))}
-      </thead>
-      <tbody>
-        {table.getRowModel().rows.map((row) => (
-          <React.Fragment key={row.id}>
-            <tr
-              onClick={row.getToggleExpandedHandler()}
-              className={`hover:bg-neutral-200 ${row.getIsExpanded() ? "bg-neutral-200" : "bg-white"}`}
-            >
-              {row.getVisibleCells().map((cell, i) => renderDataCell(cell, i))}
+    <div className={`${backgroundColor} pt-10 ps-4 pe-4 rounded-md`}>
+      <table
+        className={`table-fixed w-full border-collapse ${backgroundColor} pt-3`}
+      >
+        <thead>
+          {table.getHeaderGroups().map((headerGroup) => (
+            <tr key={headerGroup.id}>
+              {headerGroup.headers.map((header, i) =>
+                renderHeaderCell(header, i),
+              )}
             </tr>
-            {row.getIsExpanded() && (
-              <tr>
-                <td
-                  colSpan={row.getVisibleCells().length}
-                  style={{ padding: "0" }}
-                >
-                  <NestedOrderTable
-                    orders={row.original.orders}
-                    footer={footer}
-                  />
-                </td>
+          ))}
+        </thead>
+        <tbody>
+          {table.getRowModel().rows.map((row) => (
+            <React.Fragment key={row.id}>
+              <tr
+                onClick={row.getToggleExpandedHandler()}
+                className={`hover:bg-neutral-200 ${row.getIsExpanded() ? "bg-neutral-200" : backgroundColor}`}
+              >
+                {row
+                  .getVisibleCells()
+                  .map((cell, i) => renderDataCell(cell, i))}
               </tr>
-            )}
-          </React.Fragment>
-        ))}
-        {/* Footer Row */}
-        {footer && (
-          <tr className="border-t-1 font-bold border-gray-300">
-            <td className={COMMON_CELL_CLASSES}></td>
-            <td className={`${COMMON_CELL_CLASSES} text-left`}>Total Score</td>
-            <td className={COMMON_CELL_CLASSES}></td>
-            <td className={COMMON_CELL_CLASSES}></td>
-            <td className={COMMON_CELL_CLASSES}></td>
-            <td className={COMMON_CELL_CLASSES}></td>
-            <td className={COMMON_CELL_CLASSES}></td>
-            <td className={COMMON_CELL_CLASSES}></td>
-            <td className={`${COMMON_CELL_CLASSES} text-white font-bold`}>
-              <div
-                className={`${categorizeScoreToBgClassName(totalScore)} rounded-sm w-full h-full flex items-center justify-center`}
-              >
-                {`${totalScore}%`}
-              </div>
-            </td>
-            <td className={`${COMMON_CELL_CLASSES} text-white font-bold`}>
-              <div
-                className={`${categorizeScoreToBgClassName(totalPercentile)} rounded-sm w-full h-full flex items-center justify-center`}
-              >
-                {`${totalPercentile}th`}
-              </div>
-            </td>
-          </tr>
-        )}
-      </tbody>
-    </table>
+              {row.getIsExpanded() && (
+                <tr>
+                  <td
+                    colSpan={row.getVisibleCells().length}
+                    style={{ padding: "0" }}
+                  >
+                    <NestedOrderTable
+                      orders={row.original.orders}
+                      footer={footer}
+                    />
+                  </td>
+                </tr>
+              )}
+            </React.Fragment>
+          ))}
+          {/* Footer Row */}
+          {footer && (
+            <tr className="border-t-1 font-bold border-gray-300">
+              <td className={COMMON_CELL_CLASSES}></td>
+              <td className={`${COMMON_CELL_CLASSES} text-left`}>
+                Total Score
+              </td>
+              <td className={COMMON_CELL_CLASSES}></td>
+              <td className={COMMON_CELL_CLASSES}></td>
+              <td className={COMMON_CELL_CLASSES}></td>
+              <td className={COMMON_CELL_CLASSES}></td>
+              <td className={COMMON_CELL_CLASSES}></td>
+              <td className={COMMON_CELL_CLASSES}></td>
+              <td className={`${COMMON_CELL_CLASSES} text-white font-bold`}>
+                <div
+                  className={`${categorizeScoreToBgClassName(totalScore)} rounded-sm w-full h-full flex items-center justify-center`}
+                >
+                  {`${totalScore}%`}
+                </div>
+              </td>
+              <td className={`${COMMON_CELL_CLASSES} text-white font-bold`}>
+                <div
+                  className={`${categorizeScoreToBgClassName(totalPercentile)} rounded-sm w-full h-full flex items-center justify-center`}
+                >
+                  {`${totalPercentile}th`}
+                </div>
+              </td>
+            </tr>
+          )}
+        </tbody>
+      </table>
+    </div>
   );
 }
 
