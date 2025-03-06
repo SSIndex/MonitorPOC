@@ -141,6 +141,7 @@ export default function GeneralAnalysis() {
             Sustainability Accounting Standards Board (SASB) methodology
           </p>
           <div className="bg-white rounded-lg shadow-md mt-4 p-6">
+            <h5 className="ps-1 pb-5 text-primary">Overall Score SASB</h5>
             <Table />
           </div>
         </section>
