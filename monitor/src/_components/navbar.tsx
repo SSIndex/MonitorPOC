@@ -1,4 +1,5 @@
 import Image from "next/image";
+import Link from "next/link";
 
 export default function Navbar() {
   const userName = "José Miguel";
@@ -24,24 +25,45 @@ export default function Navbar() {
 
         {/* Navigation Links */}
         <div className="flex space-x-6 text-sm font-medium">
-          <a href="#" className="hover:text-gray-300 transition-colors">
+          {/* <a href="#" className="hover:text-gray-300 transition-colors">
             General
-          </a>
-          <a href="#" className="hover:text-gray-300 transition-colors">
+          </a> */}
+          <Link
+            href="/general"
+            className="hover:text-gray-300 transition-colors"
+          >
+            General
+          </Link>
+          <Link
+            href="/sasb"
+            className="hover:text-gray-300 transition-colors"
+          >
             SASB
-          </a>
-          <a href="#" className="hover:text-gray-300 transition-colors">
+          </Link>
+          <Link
+            href={"/map"}
+            className="hover:text-gray-300 transition-colors"
+          >
             MAP
-          </a>
-          <a href="#" className="hover:text-gray-300 transition-colors">
+          </Link>
+          <Link
+            href="/benchmarks"
+            className="hover:text-gray-300 transition-colors"
+          >
             Benchmarks
-          </a>
-          <a href="#" className="hover:text-gray-300 transition-colors">
+          </Link>
+          <Link
+            href="/awards"
+            className="hover:text-gray-300 transition-colors"
+          >
             Awards
-          </a>
-          <a href="#" className="hover:text-gray-300 transition-colors">
+          </Link>
+          <Link
+            href="/time-trends"
+            className="hover:text-gray-300 transition-colors"
+          >
             Time Trends
-          </a>
+          </Link>
         </div>
 
         {/* User Session */}
