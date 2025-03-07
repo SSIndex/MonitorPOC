@@ -219,7 +219,7 @@ const percentileData = [
 ];
 
 // Main General Analysis Page
-export default function PercentileAnalysis() {
+export default function MapAnalysis() {
   return (
     <div className="min-h-screen bg-gray-100">
       {/* Navbar */}
