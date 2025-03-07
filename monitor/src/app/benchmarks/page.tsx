@@ -1,3 +1,4 @@
+import { BoxPlotChart } from "@/_components/box_plot";
 import Navbar from "@/_components/navbar";
 
 // Main General Analysis Page
@@ -19,7 +20,7 @@ export default function BenchmarksAnalysis() {
             by time
           </p>
           <div className="bg-white rounded-lg shadow-md mt-4 p-12 h-96">
-            <p>Boxplot</p>
+            <BoxPlotChart />
           </div>
         </section>
       </main>
