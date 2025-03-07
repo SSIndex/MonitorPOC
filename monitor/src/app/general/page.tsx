@@ -1,6 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
-import DatePickerYearly from "@/_components/datepicker";
+import DatePickerYearly from "@/_components/date_picker";
 import Navbar from "@/_components/navbar";
 import GaugeChart from "@/_components/gauge_chart";
 import { Table } from "@/_components/table";

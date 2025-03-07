@@ -2,7 +2,7 @@
 
 import React, { useMemo } from "react";
 import ExampleGaugeChart from "./gauge_chart";
-import DatePickerYearly from "./datepicker";
+import DatePickerYearly from "./date_picker";
 import clinicaMeds from "../../public/clinicaMeds.jpeg";
 import Image from "next/image";
 
