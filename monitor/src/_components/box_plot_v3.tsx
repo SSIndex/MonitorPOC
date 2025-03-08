@@ -100,7 +100,7 @@ const options = {
 
 export default function ChartJsBoxPlot() {
   return (
-    <div className="bg-white rounded-lg shadow-md mt-4 p-12 h-96">
+    <div className="bg-white rounded-lg shadow-md h-96">
       <Chart
         type="boxplot" // Use the boxplot type from the plugin
         data={data}

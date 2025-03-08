@@ -13,7 +13,7 @@ export default function BenchmarksAnalysis() {
         Stakeholders feedback classified by company, operating locally, and by
         time
       </p>
-      <div className="bg-white rounded-lg shadow-md mt-4 p-12 h-96">
+      <div className="bg-white rounded-lg shadow-md h-96">
         <ChartJsBoxPlot />
         {/* <BoxPlotChart /> */}
         {/* <PlotlyBoxPlot /> */}

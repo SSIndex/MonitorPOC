@@ -3,7 +3,7 @@ import { Table } from "@/_components/table";
 import ExampleCard from "@/_components/card";
 import ExampleRadarChart from "@/_components/radar_chart";
 import ExampleBarChart from "@/_components/bar_chart";
-import TimeTrendsLineChart from "@/_components/line_chart";
+import TimeTrendsLineChart from "@/_components/line_chart_chartjs";
 
 const sasbRadarChartColumnData = [
   { header: "#", accessorKey: "id" },
@@ -230,7 +230,8 @@ export default function TimeTrendsAnalysis() {
         Stakeholders feedback classified by company, operating locally, and by
         time
       </p>
-      <div className="bg-white rounded-lg shadow-md mt-4 p-12 h-96">
+      <div className="bg-white rounded-lg shadow-md mt-4 h-96">
+        {/* <TimeTrendsLineChart /> */}
         <TimeTrendsLineChart />
       </div>
     </section>
