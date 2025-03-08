@@ -1,4 +1,3 @@
-import Navbar from "@/_components/navbar";
 import { Table } from "@/_components/table";
 import ExampleCard from "@/_components/card";
 import ExampleRadarChart from "@/_components/radar_chart";
@@ -221,32 +220,26 @@ const percentileData = [
 // Main General Analysis Page
 export default function MapAnalysis() {
   return (
-    <div className="min-h-screen bg-gray-100">
-      {/* Navbar */}
-      <Navbar />
-
-      {/* Main Content */}
-      <main className="container mx-auto px-40 py-6">
-        {/* SASB Impact Analysis Section */}
-        <section className="pt-6 mt-6">
-          <h4 className="text-xl font-bold text-primary">
-            Geographical Analysis
-          </h4>
-          <p className="text-ssindex-graph-grey mt-2">
+    <>
+      {/* SASB Impact Analysis Section */}
+      <section className="pt-6 mt-6">
+        <h4 className="text-xl font-bold text-primary">
+          Geographical Analysis
+        </h4>
+        <p className="text-ssindex-graph-grey mt-2">
           Stakeholders feedback classified by territory
-          </p>
-          <div className="bg-white rounded-lg shadow-md mt-4 p-6">
-            <h5 className="ps-1 text-primary">Overall Score SASB</h5>
-            <Table
-              data={dimensionData}
-              columns={dimensionColumns}
-              centerSecondLeft={true}
-              footer={true}
-              backgroundColor="bg-white"
-            />
-          </div>
-        </section>
-      </main>
-    </div>
+        </p>
+        <div className="bg-white rounded-lg shadow-md mt-4 p-6">
+          <h5 className="ps-1 text-primary">Overall Score SASB</h5>
+          <Table
+            data={dimensionData}
+            columns={dimensionColumns}
+            centerSecondLeft={true}
+            footer={true}
+            backgroundColor="bg-white"
+          />
+        </div>
+      </section>
+    </>
   );
 }

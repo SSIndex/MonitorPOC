@@ -221,34 +221,26 @@ const percentileData = [
 // Main General Analysis Page
 export default function PercentileAnalysis() {
   return (
-    <div className="min-h-screen bg-gray-100">
-      {/* Navbar */}
-      <Navbar />
-
-      {/* Main Content */}
-      <main className="container mx-auto px-40 py-6">
-        <ExampleCard />
-        {/* SASB Impact Analysis Section */}
-        <section className="pt-6 mt-6">
-          <h4 className="text-xl font-bold text-primary">
-            SASB Impact Analysis
-          </h4>
-          <p className="text-ssindex-graph-grey mt-2">
-            Stakeholders evaluate how the company is performing according to the
-            Sustainability Accounting Standards Board (SASB) methodology
-          </p>
-          <div className="bg-white rounded-lg shadow-md mt-4 p-6">
-            <h5 className="ps-1 text-primary">Overall Score SASB</h5>
-            <Table
-              data={dimensionData}
-              columns={dimensionColumns}
-              centerSecondLeft={true}
-              footer={true}
-              backgroundColor="bg-white"
-            />
-          </div>
-        </section>
-      </main>
-    </div>
+    <>
+      <ExampleCard />
+      {/* SASB Impact Analysis Section */}
+      <section className="pt-6 mt-6">
+        <h4 className="text-xl font-bold text-primary">SASB Impact Analysis</h4>
+        <p className="text-ssindex-graph-grey mt-2">
+          Stakeholders evaluate how the company is performing according to the
+          Sustainability Accounting Standards Board (SASB) methodology
+        </p>
+        <div className="bg-white rounded-lg shadow-md mt-4 p-6">
+          <h5 className="ps-1 text-primary">Overall Score SASB</h5>
+          <Table
+            data={dimensionData}
+            columns={dimensionColumns}
+            centerSecondLeft={true}
+            footer={true}
+            backgroundColor="bg-white"
+          />
+        </div>
+      </section>
+    </>
   );
 }
