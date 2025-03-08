@@ -1,4 +1,6 @@
 import { BoxPlotChart } from "@/_components/box_plot";
+import PlotlyBoxPlot from "@/_components/box_plot_v2";
+import ChartJsBoxPlot from "@/_components/box_plot_v3";
 import Navbar from "@/_components/navbar";
 
 // Main General Analysis Page
@@ -20,7 +22,9 @@ export default function BenchmarksAnalysis() {
             by time
           </p>
           <div className="bg-white rounded-lg shadow-md mt-4 p-12 h-96">
-            <BoxPlotChart />
+            <ChartJsBoxPlot />
+            {/* <BoxPlotChart /> */}
+            {/* <PlotlyBoxPlot /> */}
           </div>
         </section>
       </main>
