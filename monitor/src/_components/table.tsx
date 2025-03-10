@@ -218,7 +218,7 @@ export function Table({
 
       return (
         <td key={key} className={commonClasses}>
-          <div className="w-full h-full flex items-center justify-center">
+          <div className="w-full h-full flex items-center justify-left">
             {value}
           </div>
         </td>
