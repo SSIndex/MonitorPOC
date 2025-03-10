@@ -18,6 +18,45 @@ const sasbRadarChartTableData = [
   { id: 5, category: "Others", scoreColor: "60" },
 ];
 
+// const nestedData: DimensionRow[] = [
+//   {
+//     id: 1,
+//     dimension: "Sub-Environment",
+//     noData: false,
+//     poor: false,
+//     low: false,
+//     average: false,
+//     good: true,
+//     excellent: false,
+//     scoreColor: 70,
+//     percentileColor: 80,
+//   },
+//   // ... more sub-rows
+// ];
+
+const nestedData = [
+  {
+    review: "Good",
+    sentiment: "Positive",
+    score: 70,
+    dimension: "Sub-Environment",
+    category: "Sub-Category",
+    territoryOrState: "Territory",
+    date: "2021-09-01",
+    dataSource: "Source",
+  },
+  {
+    review: "Excellent",
+    sentiment: "Positive",
+    score: 90,
+    dimension: "Sub-Environment",
+    category: "Sub-Category",
+    territoryOrState: "Territory",
+    date: "2021-09-01",
+    dataSource: "Source",
+  },
+];
+
 // Sample data
 const dimensionData: DimensionRow[] = [
   {
@@ -31,10 +70,7 @@ const dimensionData: DimensionRow[] = [
     excellent: false,
     scoreColor: 62,
     percentileColor: 75,
-    orders: [
-      { orderId: "O1", item: "Laptop", price: 1200 },
-      { orderId: "O2", item: "Mouse", price: 25 },
-    ],
+    nestedData: nestedData,
   },
   {
     id: 2,
@@ -47,7 +83,7 @@ const dimensionData: DimensionRow[] = [
     excellent: false,
     scoreColor: 45,
     percentileColor: 60,
-    orders: [{ orderId: "O3", item: "Monitor", price: 300 }],
+    nestedData: nestedData,
   },
   {
     id: 3,
@@ -60,10 +96,7 @@ const dimensionData: DimensionRow[] = [
     excellent: false,
     scoreColor: 78,
     percentileColor: 85,
-    orders: [
-      { orderId: "O4", item: "Keyboard", price: 50 },
-      { orderId: "O5", item: "Headphones", price: 100 },
-    ],
+    nestedData: nestedData,
   },
   {
     id: 4,
@@ -76,10 +109,7 @@ const dimensionData: DimensionRow[] = [
     excellent: false,
     scoreColor: 35,
     percentileColor: 50,
-    orders: [
-      { orderId: "O6", item: "Chair", price: 150 },
-      { orderId: "O7", item: "Table", price: 200 },
-    ],
+    nestedData: nestedData,
   },
   {
     id: 5,
@@ -92,10 +122,7 @@ const dimensionData: DimensionRow[] = [
     excellent: false,
     scoreColor: 35,
     percentileColor: 50,
-    orders: [
-      { orderId: "O6", item: "Chair", price: 150 },
-      { orderId: "O7", item: "Table", price: 200 },
-    ],
+    nestedData: nestedData,
   },
 ];
 
@@ -175,48 +202,53 @@ const dimensionColumns: ColumnDef<DimensionRow>[] = [
   },
 ];
 
-// use data from the server
-const percentileDataColumns = [
-  { header: "Type", accessorKey: "type" },
-  { header: "Position", accessorKey: "position" },
-  { header: "Percentile", accessorKey: "percentile" },
-  { header: "Data Set", accessorKey: "dataset" },
+const subNestedColumns = [
+  {
+    header: "Review",
+    accessorKey: "review",
+  },
+  {
+    header: "Sentiment",
+    accessorKey: "sentiment",
+  },
+  {
+    header: "Score",
+    accessorKey: "score",
+  },
+  {
+    header: "Dimension",
+    accessorKey: "dimension",
+  },
+  {
+    header: "Category",
+    accessorKey: "category",
+  },
+  {
+    header: "Territory or State",
+    accessorKey: "territoryOrState",
+  },
+  {
+    header: "Date",
+    accessorKey: "date",
+  },
+  {
+    header: "Data Source",
+    accessorKey: "dataSource",
+  },
 ];
 
-const percentileData = [
-  {
-    id: 1,
-    type: (
-      <div className="flex items-center">
-        <div className="bg-ssindex-graph-grey  w-5 h-5 rounded-sm flex-shrink-0"></div>
-        <div>Global, Universe</div>
-      </div>
-    ),
-    position: (
-      <p className="text-ssindex-graph-grey">
-        <span className="font-bold">8</span> out of 15
-      </p>
-    ),
-    percentile: <p className="text-ssindex-graph-grey font-bold">75th</p>,
-    dataset: <p className="text-ssindex-graph-grey">50 out of 200</p>,
-  },
-  {
-    id: 2,
-    type: (
-      <div className="flex items-center">
-        <div className="bg-ssindex-footer-text  w-5 h-5 rounded-sm flex-shrink-0"></div>
-        <div>Industry, Country</div>
-      </div>
-    ),
-    position: (
-      <p className="text-ssindex-graph-grey">
-        <span className="font-bold">6</span> out of 15
-      </p>
-    ),
-    percentile: <p className="text-ssindex-graph-grey font-bold">60th</p>,
-    dataset: <p className="text-ssindex-graph-grey">50 out of 150</p>,
-  },
-];
+const dimensionFooterData = {
+  id: null,
+  dimension: "Total Score",
+  noData: null,
+  poor: null,
+  low: null,
+  average: null,
+  good: null,
+  excellent: null,
+  scoreColor: 62,
+  percentileColor: 75,
+};
 
 // Main General Analysis Page
 export default function PercentileAnalysis() {
@@ -236,8 +268,9 @@ export default function PercentileAnalysis() {
             data={dimensionData}
             columns={dimensionColumns}
             centerSecondLeft={true}
-            footer={true}
+            footerData={dimensionFooterData}
             backgroundColor="bg-white"
+            nestedColumns={subNestedColumns}
           />
         </div>
       </section>

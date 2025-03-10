@@ -10,13 +10,6 @@ import {
 } from "@tanstack/react-table";
 import { categorizeScoreToBgClassName } from "@/_utils/classNameUtils";
 
-// Define types for table data
-interface Order {
-  orderId: string;
-  item: string;
-  price: number;
-}
-
 interface DimensionRow {
   id: number;
   dimension: string;
@@ -28,7 +21,7 @@ interface DimensionRow {
   excellent: boolean;
   scoreColor: number;
   percentileColor: number;
-  orders: Order[];
+  nestedData?: DimensionRow[];
 }
 
 // Constants for common styles
@@ -58,12 +51,13 @@ const getBackgroundColorForColumn = (columnId: string): string => {
 };
 
 interface TableProps {
-  data?: DimensionRow[];
-  columns?: ColumnDef<DimensionRow>[];
+  data: DimensionRow[];
+  columns: ColumnDef<DimensionRow>[];
   backgroundColor?: string;
   centerSecondLeft?: boolean;
-  footerData?: any;
+  footerData?: { [key: string]: string | number | null };
   footerWhiteSpaceBetween?: number;
+  nestedColumns?: ColumnDef<any>[]; // Optional columns for nested table
 }
 
 // Main Table Component
@@ -73,6 +67,7 @@ export function Table({
   backgroundColor = "bg-white",
   centerSecondLeft = false,
   footerData,
+  nestedColumns,
 }: TableProps) {
   const table = useReactTable({
     data: data,
@@ -82,7 +77,6 @@ export function Table({
     getRowCanExpand: () => true,
   });
 
-  // Helper function to render header cells
   const renderHeaderCell = (
     header: Header<DimensionRow, unknown>,
     index: number,
@@ -90,7 +84,7 @@ export function Table({
     const isFirst = index === 0;
     const isSecond = index === 1 && centerSecondLeft;
     const isLast = index === table.getHeaderGroups()[0].headers.length - 1;
-    const className = `${HEADER_BASE_CLASSES} ${isFirst ? "rounded-l-lg" : ""} ${isFirst && centerSecondLeft && "w-10"} ${isSecond ? "w-50" : ""} ${isLast ? "rounded-r-lg" : ""}`;
+    const className = `${HEADER_BASE_CLASSES} ${isFirst ? "rounded-l-lg" : ""} ${isFirst && centerSecondLeft ? "w-10" : ""} ${isSecond ? "w-50" : ""} ${isLast ? "rounded-r-lg" : ""}`;
     const textAlign = isSecond ? "text-left" : "text-center";
 
     return (
@@ -100,7 +94,6 @@ export function Table({
     );
   };
 
-  // Helper function to render data cells
   const renderDataCell = (cell: any, index: number) => {
     const columnId = cell.column.id;
     const value = cell.getValue() as string | number | boolean;
@@ -162,21 +155,16 @@ export function Table({
   const renderFooterRow = (footerData: {
     [key: string]: string | number | null;
   }) => {
-    // Map footerData keys to table cells
     const footerCells = Object.keys(footerData).map((key, index) => {
       let value = footerData[key];
-      console.log(`Key: ${key}, Value: ${value}`);
-
-      // Convert null to empty string for rendering
       if (value === null) {
         value = "";
       }
 
       const textAlignClass =
-        index === 1 ? "text-left justify-left" : "text-center justify-center"; // Left-align "dimension" (index 1)
+        index === 1 ? "text-left justify-left" : "text-center justify-center";
       const commonClasses = `${COMMON_CELL_CLASSES} ${textAlignClass}`;
 
-      // Special handling for specific columns
       if (key === "dimension") {
         return (
           <td key={key} className={`${commonClasses} text-black`}>
@@ -211,7 +199,6 @@ export function Table({
         );
       }
 
-      // Default case for other columns (id, noData, poor, low, average, good, excellent)
       return (
         <td key={key} className={commonClasses}>
           <div className="w-full h-full flex items-center justify-center">
@@ -257,13 +244,15 @@ export function Table({
                     colSpan={row.getVisibleCells().length}
                     style={{ padding: "0" }}
                   >
-                    <NestedOrderTable orders={row.original.orders} />
+                    <NestedTable
+                      nestedData={row.original.nestedData}
+                      nestedColumns={nestedColumns}
+                    />
                   </td>
                 </tr>
               )}
             </React.Fragment>
           ))}
-          {/* Footer Row */}
           {footerData && renderFooterRow(footerData)}
         </tbody>
       </table>
@@ -271,17 +260,66 @@ export function Table({
   );
 }
 
-// Nested Table Component
-function NestedOrderTable({ orders }: { orders: Order[] }) {
-  const orderColumns: ColumnDef<Order>[] = [
-    { header: "Order ID", accessorKey: "orderId" },
-    { header: "Item", accessorKey: "item" },
-    { header: "Price ($)", accessorKey: "price" },
+// Generalized Nested Table Component
+function NestedTable({
+  nestedData,
+  nestedColumns,
+}: {
+  nestedData?: any[];
+  nestedColumns?: ColumnDef<any>[];
+}) {
+  // If no nested data, return null
+  if (!nestedData || nestedData.length === 0) {
+    return null;
+  }
+
+  // Check if nestedData matches DimensionRow structure for recursion
+  const isDimensionRowArray = nestedData.every(
+    (item) =>
+      "id" in item &&
+      "dimension" in item &&
+      "scoreColor" in item &&
+      "percentileColor" in item,
+  );
+
+  if (isDimensionRowArray && !nestedColumns) {
+    // Recursive case: Render another Table with default DimensionRow columns
+    return (
+      <div className="p-2 bg-gray-100">
+        <Table
+          data={nestedData as DimensionRow[]}
+          columns={[
+            { header: "#", accessorKey: "id" },
+            { header: "Dimension", accessorKey: "dimension" },
+            { header: "No Data", accessorKey: "noData" },
+            { header: "Poor", accessorKey: "poor" },
+            { header: "Low", accessorKey: "low" },
+            { header: "Average", accessorKey: "average" },
+            { header: "Good", accessorKey: "good" },
+            { header: "Excellent", accessorKey: "excellent" },
+            { header: "Score", accessorKey: "scoreColor" },
+            { header: "Percentile", accessorKey: "percentileColor" },
+          ]}
+          backgroundColor="bg-gray-100"
+          centerSecondLeft={true}
+        />
+      </div>
+    );
+  }
+
+  // Default case: Render a generic nested table with provided or default columns
+  const defaultColumns: ColumnDef<any>[] = nestedColumns || [
+    { header: "Column 1", accessorKey: Object.keys(nestedData[0])[0] },
+    { header: "Column 2", accessorKey: Object.keys(nestedData[0])[1] },
+    {
+      header: "Column 3",
+      accessorKey: Object.keys(nestedData[0])[2] || "default",
+    },
   ];
 
-  const table = useReactTable({
-    data: orders,
-    columns: orderColumns,
+  const nestedTable = useReactTable({
+    data: nestedData,
+    columns: defaultColumns,
     getCoreRowModel: getCoreRowModel(),
   });
 
@@ -289,7 +327,7 @@ function NestedOrderTable({ orders }: { orders: Order[] }) {
     <div style={{ padding: "10px", background: "#f9f9f9" }}>
       <table style={{ borderCollapse: "collapse", width: "100%" }}>
         <thead>
-          {table.getHeaderGroups().map((headerGroup) => (
+          {nestedTable.getHeaderGroups().map((headerGroup) => (
             <tr key={headerGroup.id}>
               {headerGroup.headers.map((header) => (
                 <th
@@ -307,7 +345,7 @@ function NestedOrderTable({ orders }: { orders: Order[] }) {
           ))}
         </thead>
         <tbody>
-          {table.getRowModel().rows.map((row) => (
+          {nestedTable.getRowModel().rows.map((row) => (
             <tr key={row.id}>
               {row.getVisibleCells().map((cell) => (
                 <td
