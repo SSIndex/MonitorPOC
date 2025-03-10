@@ -62,7 +62,8 @@ interface TableProps {
   columns?: ColumnDef<DimensionRow>[];
   backgroundColor?: string;
   centerSecondLeft?: boolean;
-  footer?: boolean;
+  footerData?: any;
+  footerWhiteSpaceBetween?: number;
 }
 
 // Main Table Component
@@ -71,7 +72,7 @@ export function Table({
   columns,
   backgroundColor = "bg-white",
   centerSecondLeft = false,
-  footer,
+  footerData,
 }: TableProps) {
   const table = useReactTable({
     data: data,
@@ -80,13 +81,6 @@ export function Table({
     getExpandedRowModel: getExpandedRowModel(),
     getRowCanExpand: () => true,
   });
-
-  const totalScore = Math.round(
-    data.reduce((sum, row) => sum + row.scoreColor, 0) / data.length,
-  );
-  const totalPercentile = Math.round(
-    data.reduce((sum, row) => sum + row.percentileColor, 0) / data.length,
-  );
 
   // Helper function to render header cells
   const renderHeaderCell = (
@@ -165,6 +159,73 @@ export function Table({
     }
   };
 
+  const renderFooterRow = (footerData: {
+    [key: string]: string | number | null;
+  }) => {
+    // Map footerData keys to table cells
+    const footerCells = Object.keys(footerData).map((key, index) => {
+      let value = footerData[key];
+      console.log(`Key: ${key}, Value: ${value}`);
+
+      // Convert null to empty string for rendering
+      if (value === null) {
+        value = "";
+      }
+
+      const textAlignClass =
+        index === 1 ? "text-left justify-left" : "text-center justify-center"; // Left-align "dimension" (index 1)
+      const commonClasses = `${COMMON_CELL_CLASSES} ${textAlignClass}`;
+
+      // Special handling for specific columns
+      if (key === "dimension") {
+        return (
+          <td key={key} className={`${commonClasses} text-black`}>
+            <div className="w-full h-full flex items-center justify-start">
+              {value}
+            </div>
+          </td>
+        );
+      }
+
+      if (key === "scoreColor") {
+        return (
+          <td key={key} className={`${commonClasses} text-white font-bold`}>
+            <div
+              className={`${categorizeScoreToBgClassName(Number(value))} rounded-sm w-full h-full flex items-center justify-center`}
+            >
+              {`${value}%`}
+            </div>
+          </td>
+        );
+      }
+
+      if (key === "percentileColor") {
+        return (
+          <td key={key} className={`${commonClasses} text-white font-bold`}>
+            <div
+              className={`${categorizeScoreToBgClassName(Number(value))} rounded-sm w-full h-full flex items-center justify-center`}
+            >
+              {`${value}th`}
+            </div>
+          </td>
+        );
+      }
+
+      // Default case for other columns (id, noData, poor, low, average, good, excellent)
+      return (
+        <td key={key} className={commonClasses}>
+          <div className="w-full h-full flex items-center justify-center">
+            {value}
+          </div>
+        </td>
+      );
+    });
+
+    return (
+      <tr className="border-t-1 font-bold border-gray-300">{footerCells}</tr>
+    );
+  };
+
   return (
     <div className={`${backgroundColor} pt-10 ps-4 pe-4 rounded-md`}>
       <table
@@ -196,44 +257,14 @@ export function Table({
                     colSpan={row.getVisibleCells().length}
                     style={{ padding: "0" }}
                   >
-                    <NestedOrderTable
-                      orders={row.original.orders}
-                      footer={footer}
-                    />
+                    <NestedOrderTable orders={row.original.orders} />
                   </td>
                 </tr>
               )}
             </React.Fragment>
           ))}
           {/* Footer Row */}
-          {footer && (
-            <tr className="border-t-1 font-bold border-gray-300">
-              <td className={COMMON_CELL_CLASSES}></td>
-              <td className={`${COMMON_CELL_CLASSES} text-left`}>
-                Total Score
-              </td>
-              <td className={COMMON_CELL_CLASSES}></td>
-              <td className={COMMON_CELL_CLASSES}></td>
-              <td className={COMMON_CELL_CLASSES}></td>
-              <td className={COMMON_CELL_CLASSES}></td>
-              <td className={COMMON_CELL_CLASSES}></td>
-              <td className={COMMON_CELL_CLASSES}></td>
-              <td className={`${COMMON_CELL_CLASSES} text-white font-bold`}>
-                <div
-                  className={`${categorizeScoreToBgClassName(totalScore)} rounded-sm w-full h-full flex items-center justify-center`}
-                >
-                  {`${totalScore}%`}
-                </div>
-              </td>
-              <td className={`${COMMON_CELL_CLASSES} text-white font-bold`}>
-                <div
-                  className={`${categorizeScoreToBgClassName(totalPercentile)} rounded-sm w-full h-full flex items-center justify-center`}
-                >
-                  {`${totalPercentile}th`}
-                </div>
-              </td>
-            </tr>
-          )}
+          {footerData && renderFooterRow(footerData)}
         </tbody>
       </table>
     </div>
@@ -241,7 +272,7 @@ export function Table({
 }
 
 // Nested Table Component
-function NestedOrderTable({ orders, footer }: { orders: Order[] }) {
+function NestedOrderTable({ orders }: { orders: Order[] }) {
   const orderColumns: ColumnDef<Order>[] = [
     { header: "Order ID", accessorKey: "orderId" },
     { header: "Item", accessorKey: "item" },
@@ -276,19 +307,18 @@ function NestedOrderTable({ orders, footer }: { orders: Order[] }) {
           ))}
         </thead>
         <tbody>
-          {footer &&
-            table.getRowModel().rows.map((row) => (
-              <tr key={row.id}>
-                {row.getVisibleCells().map((cell) => (
-                  <td
-                    key={cell.id}
-                    style={{ border: "1px solid gray", padding: "6px" }}
-                  >
-                    {cell.getValue()}
-                  </td>
-                ))}
-              </tr>
-            ))}
+          {table.getRowModel().rows.map((row) => (
+            <tr key={row.id}>
+              {row.getVisibleCells().map((cell) => (
+                <td
+                  key={cell.id}
+                  style={{ border: "1px solid gray", padding: "6px" }}
+                >
+                  {cell.getValue()}
+                </td>
+              ))}
+            </tr>
+          ))}
         </tbody>
       </table>
     </div>

@@ -1,7 +1,3 @@
-import Image from "next/image";
-import Link from "next/link";
-import DatePickerYearly from "@/_components/date_picker";
-import GaugeChart from "@/_components/gauge_chart";
 import { Table } from "@/_components/table";
 import ExampleCard from "@/_components/card";
 import ExampleRadarChart from "@/_components/radar_chart";
@@ -21,6 +17,12 @@ const sasbRadarChartTableData = [
   { id: 5, category: "Others", scoreColor: "60" },
 ];
 
+const sasbRadarChartFooterData = {
+  id: null,
+  category: "Total Score",
+  scoreColor: "75",
+};
+
 // Sample data
 const dimensionData: DimensionRow[] = [
   {
@@ -34,10 +36,6 @@ const dimensionData: DimensionRow[] = [
     excellent: false,
     scoreColor: 62,
     percentileColor: 75,
-    orders: [
-      { orderId: "O1", item: "Laptop", price: 1200 },
-      { orderId: "O2", item: "Mouse", price: 25 },
-    ],
   },
   {
     id: 2,
@@ -50,7 +48,6 @@ const dimensionData: DimensionRow[] = [
     excellent: false,
     scoreColor: 45,
     percentileColor: 60,
-    orders: [{ orderId: "O3", item: "Monitor", price: 300 }],
   },
   {
     id: 3,
@@ -63,10 +60,6 @@ const dimensionData: DimensionRow[] = [
     excellent: false,
     scoreColor: 78,
     percentileColor: 85,
-    orders: [
-      { orderId: "O4", item: "Keyboard", price: 50 },
-      { orderId: "O5", item: "Headphones", price: 100 },
-    ],
   },
   {
     id: 4,
@@ -79,10 +72,6 @@ const dimensionData: DimensionRow[] = [
     excellent: false,
     scoreColor: 35,
     percentileColor: 50,
-    orders: [
-      { orderId: "O6", item: "Chair", price: 150 },
-      { orderId: "O7", item: "Table", price: 200 },
-    ],
   },
   {
     id: 5,
@@ -95,10 +84,6 @@ const dimensionData: DimensionRow[] = [
     excellent: false,
     scoreColor: 35,
     percentileColor: 50,
-    orders: [
-      { orderId: "O6", item: "Chair", price: 150 },
-      { orderId: "O7", item: "Table", price: 200 },
-    ],
   },
 ];
 
@@ -221,26 +206,18 @@ const percentileData = [
   },
 ];
 
-{
-  /* <div
-key={index}
-className="flex items-center space-x-4 py-2 border-b last:border-b-0"
->
-<div
-  className={`${item.color} w-5 h-5 rounded-sm flex-shrink-0`}
-></div>
-<div className="flex-1">
-  <p className="font-bold text-gray-800">{item.label}</p>
-  <p className="text-gray-600">
-    {item.position} out of {item.total}
-  </p>
-</div>
-<p className="font-semibold text-gray-600">
-  {item.percentile}
-</p>
-<p className="text-gray-600">{item.rows}</p>
-</div> */
-}
+const dimensionFooterData = {
+  id: null,
+  dimension: "Total Score",
+  noData: null,
+  poor: null,
+  low: null,
+  average: null,
+  good: null,
+  excellent: null,
+  scoreColor: 62,
+  percentileColor: 75,
+};
 
 // Main General Analysis Page
 export default function GeneralAnalysis() {
@@ -293,7 +270,6 @@ export default function GeneralAnalysis() {
               data={percentileData}
               columns={percentileDataColumns}
               centerSecondLeft={false}
-              footer={false}
               backgroundColor="bg-white"
             />
           </div>
@@ -325,7 +301,7 @@ export default function GeneralAnalysis() {
             data={dimensionData}
             columns={dimensionColumns}
             centerSecondLeft={true}
-            footer={true}
+            footerData={dimensionFooterData}
             backgroundColor="bg-white"
           />
         </div>
@@ -342,6 +318,7 @@ export default function GeneralAnalysis() {
               centerSecondLeft={true}
               footer={false}
               backgroundColor="bg-ssindex-nested-table-background"
+              footerData={sasbRadarChartFooterData}
             />
           </div>
           <div className="col-span-2 h-96 flex items-center justify-center">
