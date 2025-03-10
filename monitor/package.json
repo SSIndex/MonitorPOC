@@ -11,6 +11,7 @@
     "lint:fix": "next lint --fix && prettier --write ."
   },
   "dependencies": {
+    "@heroicons/react": "^2.2.0",
     "@sgratzl/chartjs-chart-boxplot": "^4.4.4",
     "@tanstack/react-table": "^8.21.2",
     "chart.js": "^4.4.8",
