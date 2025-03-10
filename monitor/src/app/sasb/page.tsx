@@ -273,6 +273,17 @@ export default function PercentileAnalysis() {
             nestedColumns={subNestedColumns}
           />
         </div>
+        <div className="bg-light rounded-lg shadow-md mt-4 p-6">
+          <h5 className="ps-1 text-primary">Environment</h5>
+          <Table
+            data={dimensionData}
+            columns={dimensionColumns}
+            centerSecondLeft={true}
+            footerData={dimensionFooterData}
+            backgroundColor="bg-light"
+            nestedColumns={subNestedColumns}
+          />
+        </div>
       </section>
     </>
   );

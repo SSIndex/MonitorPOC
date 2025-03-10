@@ -318,6 +318,7 @@ export default function GeneralAnalysis() {
               centerSecondLeft={true}
               footer={false}
               backgroundColor="bg-ssindex-nested-table-background"
+              headerBackgroundColor="bg-ssindex-table-header-gray"
               footerData={sasbRadarChartFooterData}
             />
           </div>

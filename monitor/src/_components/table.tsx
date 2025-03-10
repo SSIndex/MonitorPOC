@@ -24,12 +24,6 @@ interface DimensionRow {
   nestedData?: DimensionRow[];
 }
 
-// Constants for common styles
-const COMMON_CELL_CLASSES = "pt-5 pb-5 ps-1 pe-1 text-primary h-20";
-const HEADER_BASE_CLASSES =
-  "bg-ssindex-table-header-gray text-primary ps-4 pe-4";
-const COLORED_CELLS = ["noData", "poor", "low", "average", "good", "excellent"];
-
 // Helper function to get background color based on column ID
 const getBackgroundColorForColumn = (columnId: string): string => {
   switch (columnId) {
@@ -54,6 +48,7 @@ interface TableProps {
   data: DimensionRow[];
   columns: ColumnDef<DimensionRow>[];
   backgroundColor?: string;
+  headerBackgroundColor?: string;
   centerSecondLeft?: boolean;
   footerData?: { [key: string]: string | number | null };
   footerWhiteSpaceBetween?: number;
@@ -65,10 +60,32 @@ export function Table({
   data,
   columns,
   backgroundColor = "bg-white",
+  headerBackgroundColor,
   centerSecondLeft = false,
   footerData,
   nestedColumns,
 }: TableProps) {
+  // Constants for common styles
+  const COMMON_CELL_CLASSES = "pt-5 pb-5 ps-1 pe-1 text-primary h-20";
+
+  const headerColor = headerBackgroundColor
+    ? headerBackgroundColor
+    : backgroundColor === "bg-white"
+      ? "bg-ssindex-table-header-gray"
+      : "bg-white";
+
+  console.log("headerColor", headerColor);
+
+  const HEADER_BASE_CLASSES = `${headerColor} text-primary ps-4 pe-4`;
+  const COLORED_CELLS = [
+    "noData",
+    "poor",
+    "low",
+    "average",
+    "good",
+    "excellent",
+  ];
+
   const table = useReactTable({
     data: data,
     columns: columns,
