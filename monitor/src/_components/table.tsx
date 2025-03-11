@@ -260,7 +260,7 @@ export function Table({
             <React.Fragment key={row.id}>
               <tr
                 onClick={row.getToggleExpandedHandler()}
-                className={`hover:bg-neutral-200 ${row.getIsExpanded() ? "bg-neutral-200" : backgroundColor}`}
+                className={`hover:bg-neutral-200 ${row.getIsExpanded() && nestedColumns ? "bg-neutral-200" : backgroundColor}`}
               >
                 {row
                   .getVisibleCells()
