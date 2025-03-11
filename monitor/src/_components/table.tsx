@@ -9,25 +9,16 @@ import {
   ColumnDef,
   Header,
   flexRender,
-  // SortingState,
+  SortingState,
 } from "@tanstack/react-table";
 import { categorizeScoreToBgClassName } from "@/_utils/classNameUtils";
 
-interface DimensionRow {
-  id: number;
-  dimension: string;
-  noData: boolean;
-  poor: boolean;
-  low: boolean;
-  average: boolean;
-  good: boolean;
-  excellent: boolean;
-  scoreColor: number;
-  percentileColor: number;
-  nestedData?: DimensionRow[];
-}
+// Constants
+const COMMON_CELL_CLASSES = "pt-5 pb-5 ps-1 pe-1 text-primary h-20";
+const HEADER_BASE_CLASSES = "text-primary ps-4 pe-4";
+const COLORED_CELLS = ["noData", "poor", "low", "average", "good", "excellent"];
 
-// Helper function to get background color based on column ID
+// Helper Functions
 const getBackgroundColorForColumn = (columnId: string): string => {
   switch (columnId) {
     case "noData":
@@ -47,17 +38,57 @@ const getBackgroundColorForColumn = (columnId: string): string => {
   }
 };
 
+const getHeaderColor = (
+  backgroundColor: string,
+  headerBackgroundColor?: string,
+): string => {
+  return (
+    headerBackgroundColor ||
+    (backgroundColor === "bg-white"
+      ? "bg-ssindex-table-header-gray"
+      : "bg-white")
+  );
+};
+
+// Interfaces
+interface DimensionRow {
+  id: number;
+  dimension: string;
+  noData: boolean;
+  poor: boolean;
+  low: boolean;
+  average: boolean;
+  good: boolean;
+  excellent: boolean;
+  scoreColor: number;
+  percentileColor: number;
+  nestedData?: DimensionRow[] | any[];
+}
+
+interface FooterData {
+  id?: string | number | null;
+  dimension?: string | number | null;
+  noData?: string | number | null;
+  poor?: string | number | null;
+  low?: string | number | null;
+  average?: string | number | null;
+  good?: string | number | null;
+  excellent?: string | number | null;
+  scoreColor?: string | number | null;
+  percentileColor?: string | number | null;
+}
+
 interface TableProps {
   data: DimensionRow[];
   columns: ColumnDef<DimensionRow>[];
   backgroundColor?: string;
   headerBackgroundColor?: string;
   centerSecondLeft?: boolean;
-  footerData?: { [key: string]: string | number | null };
-  footerWhiteSpaceBetween?: number;
-  nestedColumns?: ColumnDef<any>[]; // Optional columns for nested table
-  nestedSortColumn: string;
-  nestedSortDirection: string;
+  footerData?: FooterData;
+  nestedColumns?: ColumnDef<any>[];
+  nestedSortColumn?: string;
+  nestedSortDirection?: "asc" | "desc";
+  isNested?: boolean; // Indicates if this is a nested table (limits recursion)
 }
 
 // Main Table Component
@@ -71,35 +102,31 @@ export function Table({
   nestedColumns,
   nestedSortColumn,
   nestedSortDirection,
+  isNested = false,
 }: TableProps) {
-  // Constants for common styles
-  const COMMON_CELL_CLASSES = "pt-5 pb-5 ps-1 pe-1 text-primary h-20";
+  const [sorting, setSorting] = React.useState<SortingState>(
+    nestedSortColumn && nestedSortDirection
+      ? [{ id: nestedSortColumn, desc: nestedSortDirection === "desc" }]
+      : [],
+  );
 
-  const headerColor = headerBackgroundColor
-    ? headerBackgroundColor
-    : backgroundColor === "bg-white"
-      ? "bg-ssindex-table-header-gray"
-      : "bg-white";
-
-  console.log("headerColor", headerColor);
-
-  const HEADER_BASE_CLASSES = `${headerColor} text-primary ps-4 pe-4`;
-  const COLORED_CELLS = [
-    "noData",
-    "poor",
-    "low",
-    "average",
-    "good",
-    "excellent",
-  ];
+  const headerColor = getHeaderColor(backgroundColor, headerBackgroundColor);
+  const headerClasses = `${HEADER_BASE_CLASSES} ${headerColor}`;
 
   const table = useReactTable({
-    data: data,
-    columns: columns,
+    data,
+    columns,
+    state: { sorting },
+    onSortingChange: setSorting,
     getCoreRowModel: getCoreRowModel(),
     getExpandedRowModel: getExpandedRowModel(),
-    getRowCanExpand: () => true,
+    getRowCanExpand: () => !isNested, // Disable expansion for nested tables
   });
+
+  const arrowComponent: Record<"asc" | "desc", React.ReactElement> = {
+    asc: <ChevronUpIcon className="h-4 w-4" data-testid="asc-icon" />,
+    desc: <ChevronDownIcon className="h-4 w-4" data-testid="desc-icon" />,
+  };
 
   const renderHeaderCell = (
     header: Header<DimensionRow, unknown>,
@@ -108,15 +135,17 @@ export function Table({
     const isFirst = index === 0;
     const isSecond = index === 1 && centerSecondLeft;
     const isLast = index === table.getHeaderGroups()[0].headers.length - 1;
-    const className = `${HEADER_BASE_CLASSES} ${isFirst ? "rounded-l-lg" : ""} ${isFirst && centerSecondLeft ? "w-10" : ""} ${isSecond ? "w-50" : ""} ${isLast ? "rounded-r-lg" : ""}`;
+    const className = `${headerClasses} ${isFirst ? "rounded-l-lg" : ""} ${isFirst && centerSecondLeft ? "w-10" : ""} ${isSecond ? "w-50" : ""} ${isLast ? "rounded-r-lg" : ""}`;
     const textAlign = isSecond ? "text-left" : "text-center";
+
+    const sortState = sorting.find((s) => s.id === header.id);
+    const currentSort = sortState ? (sortState.desc ? "desc" : "asc") : "";
 
     return (
       <th key={header.id} className={`${className} ${textAlign}`}>
-        <div className="flex items-center gap-2">
-          {header.isPlaceholder
-            ? null
-            : flexRender(header.column.columnDef.header, header.getContext())}
+        <div className="flex items-center gap-2 justify-center">
+          {flexRender(header.column.columnDef.header, header.getContext())}
+          {currentSort && arrowComponent[currentSort]}
         </div>
       </th>
     );
@@ -126,18 +155,15 @@ export function Table({
     const columnId = cell.column.id;
     const value = cell.getValue() as string | number | boolean;
     const isSecondColumn = index === 1 && centerSecondLeft;
-    const justifyAlignClass = isSecondColumn
-      ? "justify-left text-left"
+    const alignClass = isSecondColumn
+      ? "justify-start text-left"
       : "justify-center text-center";
 
     if (COLORED_CELLS.includes(columnId)) {
       const backgroundColor = getBackgroundColorForColumn(columnId);
       const opacityClass = value ? "opacity-100" : "opacity-30";
       return (
-        <td
-          key={cell.id}
-          className={`${COMMON_CELL_CLASSES} ${justifyAlignClass}`}
-        >
+        <td key={cell.id} className={`${COMMON_CELL_CLASSES} ${alignClass}`}>
           <div
             className={`${backgroundColor} ${opacityClass} border-3 border-dark w-full h-full flex items-center justify-center`}
           >
@@ -161,7 +187,7 @@ export function Table({
             className={`${COMMON_CELL_CLASSES} text-white font-bold`}
           >
             <div
-              className={`${backgroundColor} rounded-sm w-full h-full flex ${justifyAlignClass} items-center`}
+              className={`${backgroundColor} rounded-sm w-full h-full flex ${alignClass} items-center`}
             >
               {columnId === "scoreColor" ? `${value}%` : `${value}th`}
             </div>
@@ -171,7 +197,7 @@ export function Table({
         return (
           <td key={cell.id} className={`${COMMON_CELL_CLASSES}`}>
             <div
-              className={`${backgroundColor} w-full h-full flex ${justifyAlignClass} items-center`}
+              className={`${backgroundColor} w-full h-full flex ${alignClass} items-center`}
             >
               {value}
             </div>
@@ -180,18 +206,12 @@ export function Table({
     }
   };
 
-  const renderFooterRow = (footerData: {
-    [key: string]: string | number | null;
-  }) => {
+  const renderFooterRow = (footerData: FooterData) => {
     const footerCells = Object.keys(footerData).map((key, index) => {
-      let value = footerData[key];
-      if (value === null) {
-        value = "";
-      }
-
-      const textAlignClass =
-        index === 1 ? "text-left justify-left" : "text-center justify-center";
-      const commonClasses = `${COMMON_CELL_CLASSES} ${textAlignClass}`;
+      const value = footerData[key] ?? "";
+      const alignClass =
+        index === 1 ? "justify-start text-left" : "justify-center text-center";
+      const commonClasses = `${COMMON_CELL_CLASSES} ${alignClass}`;
 
       if (key === "dimension") {
         return (
@@ -229,7 +249,7 @@ export function Table({
 
       return (
         <td key={key} className={commonClasses}>
-          <div className="w-full h-full flex items-center justify-left">
+          <div className="w-full h-full flex items-center justify-center">
             {value}
           </div>
         </td>
@@ -237,7 +257,7 @@ export function Table({
     });
 
     return (
-      <tr className="border-t-1 font-bold border-gray-300">{footerCells}</tr>
+      <tr className="border-t border-gray-300 font-bold">{footerCells}</tr>
     );
   };
 
@@ -260,159 +280,32 @@ export function Table({
             <React.Fragment key={row.id}>
               <tr
                 onClick={row.getToggleExpandedHandler()}
-                className={`hover:bg-neutral-200 ${row.getIsExpanded() && nestedColumns ? "bg-neutral-200" : backgroundColor}`}
+                className={`hover:bg-neutral-200 ${row.getIsExpanded() ? "bg-neutral-200" : backgroundColor}`}
               >
                 {row
                   .getVisibleCells()
                   .map((cell, i) => renderDataCell(cell, i))}
               </tr>
-              {row.getIsExpanded() && (
+              {row.getIsExpanded() && row.original.nestedData && (
                 <tr>
-                  <td
-                    colSpan={row.getVisibleCells().length}
-                    style={{ padding: "0" }}
-                  >
-                    <NestedTable
-                      nestedData={row.original.nestedData}
-                      nestedColumns={nestedColumns}
-                      nestedSortColumn={nestedSortColumn}
-                      nestedSortDirection={nestedSortDirection}
-                    />
+                  <td colSpan={row.getVisibleCells().length} className="p-0">
+                    <div className="p-2 bg-gray-100">
+                      <Table
+                        data={row.original.nestedData as DimensionRow[]}
+                        columns={nestedColumns || columns}
+                        backgroundColor="bg-gray-100"
+                        centerSecondLeft={false}
+                        nestedSortColumn={nestedSortColumn}
+                        nestedSortDirection={nestedSortDirection}
+                        isNested={true} // Mark as nested to limit recursion
+                      />
+                    </div>
                   </td>
                 </tr>
               )}
             </React.Fragment>
           ))}
           {footerData && renderFooterRow(footerData)}
-        </tbody>
-      </table>
-    </div>
-  );
-}
-
-// Generalized Nested Table Component
-function NestedTable({
-  nestedData,
-  nestedColumns,
-  nestedSortColumn,
-  nestedSortDirection,
-  // sortColumn,
-}: {
-  nestedData?: any[];
-  nestedColumns?: ColumnDef<any>[];
-  nestedSortColumn: string;
-  nestedSortDirection: string;
-  // sortColumn: string;
-}) {
-  console.log("nestedSortColumn", nestedSortColumn);
-  console.log("nestedSortDirection", nestedSortDirection);
-
-  const arrowComponent: Record<string, React.ReactElement> = {
-    asc: <ChevronUpIcon className="h-4 w-4" data-testid="asc-icon" />,
-    desc: <ChevronDownIcon className="h-4 w-4" data-testid="desc-icon" />,
-  };
-
-  // If no nested data, return null
-  if (!nestedData || nestedData.length === 0) {
-    return null;
-  }
-
-  // Check if nestedData matches DimensionRow structure for recursion
-  const isDimensionRowArray = nestedData.every(
-    (item) =>
-      "id" in item &&
-      "dimension" in item &&
-      "scoreColor" in item &&
-      "percentileColor" in item,
-  );
-
-  if (isDimensionRowArray && !nestedColumns) {
-    // Recursive case: Render another Table with default DimensionRow columns
-    return (
-      <div className="p-2 bg-gray-100">
-        <Table
-          data={nestedData as DimensionRow[]}
-          columns={[
-            { header: "#", accessorKey: "id" },
-            { header: "Dimension", accessorKey: "dimension" },
-            { header: "No Data", accessorKey: "noData" },
-            { header: "Poor", accessorKey: "poor" },
-            { header: "Low", accessorKey: "low" },
-            { header: "Average", accessorKey: "average" },
-            { header: "Good", accessorKey: "good" },
-            { header: "Excellent", accessorKey: "excellent" },
-            { header: "Score", accessorKey: "scoreColor" },
-            { header: "Percentile", accessorKey: "percentileColor" },
-          ]}
-          backgroundColor="bg-gray-100"
-          centerSecondLeft={true}
-        />
-      </div>
-    );
-  }
-
-  const nestedTable = useReactTable({
-    data: nestedData,
-    columns: nestedColumns,
-    // state: {
-    //   sorting,
-    // },
-    // onSortingChange: setSorting,
-    getCoreRowModel: getCoreRowModel(),
-  });
-
-  return (
-    <div style={{ padding: "10px", background: "#f9f9f9" }}>
-      <table style={{ borderCollapse: "collapse", width: "100%" }}>
-        <thead>
-          {nestedTable.getHeaderGroups().map((headerGroup) => (
-            <tr key={headerGroup.id}>
-              {headerGroup.headers.map((header) => {
-                const columnField = header.id;
-                const currentSort =
-                  nestedSortColumn === columnField ? nestedSortDirection : "";
-                console.log("currentSort", currentSort);
-                // const currentSort = sort === columnField ? sorting : "";
-
-                return (
-                  <th
-                    key={header.id}
-                    style={{
-                      border: "1px solid gray",
-                      padding: "6px",
-                      background: "#ddd",
-                    }}
-                  >
-                    <div className="flex items-center gap-2">
-                      {header.isPlaceholder
-                        ? null
-                        : flexRender(
-                            header.column.columnDef.header,
-                            header.getContext(),
-                          )}
-                      {(nestedSortColumn === columnField &&
-                        arrowComponent[nestedSortDirection]) ??
-                        ""}
-                    </div>
-                  </th>
-                );
-              })}
-            </tr>
-          ))}
-        </thead>
-        <tbody>
-          {nestedTable.getRowModel().rows.map((row) => (
-            <tr key={row.id}>
-              {row.getVisibleCells().map((cell) => (
-                <td
-                  key={cell.id}
-                  style={{ border: "1px solid gray", padding: "6px" }}
-                >
-                  {cell.getValue()}
-                </td>
-              ))}
-            </tr>
-          ))}
         </tbody>
       </table>
     </div>
