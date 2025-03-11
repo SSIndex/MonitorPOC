@@ -16,6 +16,8 @@ import {
 import { useGetOverallScoreSASB } from "@/_handlers/requests/sasb";
 import {
   transformSummaryToFooter,
+  transformToRadarChartData,
+  transformToRadarChartFooterData,
   transformToTableData,
 } from "@/_utils/dataTransformations";
 
@@ -99,12 +101,14 @@ export default function GeneralAnalysis() {
           {/* Table */}
           <div className="col-span-1 ">
             <Table
-              data={sasbRadarChartTableData}
+              data={transformToRadarChartData(overallScoreSASB.data)}
               columns={sasbRadarChartColumnData}
               centerSecondLeft={true}
               backgroundColor="bg-ssindex-nested-table-background"
               headerBackgroundColor="bg-ssindex-table-header-gray"
-              footerData={sasbRadarChartFooterData}
+              footerData={transformToRadarChartFooterData(
+                overallScoreSASB.summary,
+              )}
             />
           </div>
           <div className="col-span-2 h-96 flex items-center justify-center">

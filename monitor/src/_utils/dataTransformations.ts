@@ -1,3 +1,28 @@
+interface DimensionRow {
+  id: number;
+  dimension: string;
+  score: number;
+  percentile: number;
+}
+
+interface RadarChartRow {
+  id: number;
+  category: string;
+  scoreColor: string;
+}
+
+// Define types for clarity
+interface SummaryData {
+  score: number;
+  percentile: number;
+}
+
+interface FooterData {
+  id: null;
+  dimension: string;
+  scoreColor: string;
+}
+
 export function transformToTableData(rawData) {
   return rawData.map((item) => ({
     ...item,
@@ -10,6 +35,36 @@ export function transformToTableData(rawData) {
     scoreColor: item.score,
     percentileColor: item.percentile,
   }));
+}
+
+// Utility function to convert to title case
+function toTitleCase(str: string): string {
+  return str
+    .toLowerCase()
+    .split(" ")
+    .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+    .join(" ");
+}
+
+export function transformToRadarChartData(
+  rawData: DimensionRow[],
+): RadarChartRow[] {
+  return rawData.map((item) => ({
+    id: item.id,
+    dimension: toTitleCase(item.dimension),
+    scoreColor: item.score.toString(),
+  }));
+}
+
+// Transformation function
+export function transformToRadarChartFooterData(
+  summaryData: SummaryData,
+): FooterData {
+  return {
+    id: null,
+    dimension: "Total Score",
+    scoreColor: summaryData.score.toString(),
+  };
 }
 
 export function transformSummaryToFooter(summaryData) {

@@ -1,6 +1,6 @@
 export const sasbRadarChartColumnData = [
   { header: "#", accessorKey: "id" },
-  { header: "Dimension", accessorKey: "category" },
+  { header: "Dimension", accessorKey: "dimension" },
   { header: "Score", accessorKey: "scoreColor" },
 ];
 
