@@ -1,15 +1,13 @@
 "use client";
 
 import { Table } from "@/_components/table";
-import ExampleCard from "@/_components/card";
+import { Card } from "@/_components/card";
 import ExampleRadarChart from "@/_components/radar_chart";
 import ExampleBarChart from "@/_components/bar_chart";
 // import { }
 import {
   sasbRadarChartColumnData,
-  sasbRadarChartFooterData,
   dimensionColumns,
-  sasbRadarChartTableData,
   percentileData,
   percentileDataColumns,
 } from "@/_mocks/data";
@@ -20,6 +18,16 @@ import {
   transformToRadarChartFooterData,
   transformToTableData,
 } from "@/_utils/dataTransformations";
+import DatePickerYearly from "@/_components/date_picker";
+import { GaugeChart } from "@/_components/gauge_chart";
+
+const categorizeScore = (score: number): string => {
+  if (score < 20) return "Poor";
+  if (score < 40) return "Low";
+  if (score < 60) return "Average";
+  if (score < 80) return "Good";
+  return "Excellent";
+};
 
 // Main General Analysis Page
 export default function GeneralAnalysis() {
@@ -28,12 +36,24 @@ export default function GeneralAnalysis() {
   if (isLoading) return <div>Loading...</div>;
   if (error) return <div>Error: {error.message}</div>;
 
-  console.log(overallScoreSASB);
-
   return (
     <>
-      <ExampleCard />
-
+      <Card
+        companyName={overallScoreSASB.companyName}
+        industry={overallScoreSASB.industryName}
+        country={overallScoreSASB.countryName}
+        region={overallScoreSASB.regionName}
+        overview={categorizeScore(overallScoreSASB.summary.score)}
+        overviewGraph={
+          <GaugeChart
+            score={overallScoreSASB.summary.score}
+            scoreText={categorizeScore(overallScoreSASB.summary.score)}
+            minValue={0}
+            maxValue={100}
+          />
+        }
+        datePicker={<DatePickerYearly />}
+      />
       <section className="pt-6">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           {/* Left Column */}
