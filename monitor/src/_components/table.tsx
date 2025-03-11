@@ -136,14 +136,14 @@ export function Table({
     const isSecond = index === 1 && centerSecondLeft;
     const isLast = index === table.getHeaderGroups()[0].headers.length - 1;
     const className = `${headerClasses} ${isFirst ? "rounded-l-lg" : ""} ${isFirst && centerSecondLeft ? "w-10" : ""} ${isSecond ? "w-50" : ""} ${isLast ? "rounded-r-lg" : ""}`;
-    const textAlign = isSecond ? "text-left" : "text-center";
+    const textAlign = isSecond ? "text-left justify-left" : "text-center justify-center";
 
     const sortState = sorting.find((s) => s.id === header.id);
     const currentSort = sortState ? (sortState.desc ? "desc" : "asc") : "";
 
     return (
-      <th key={header.id} className={`${className} ${textAlign}`}>
-        <div className="flex items-center gap-2 justify-center">
+      <th key={header.id} className={`${className}`}>
+        <div className={`flex items-center gap-2 ${textAlign}`}>
           {flexRender(header.column.columnDef.header, header.getContext())}
           {currentSort && arrowComponent[currentSort]}
         </div>
@@ -262,7 +262,7 @@ export function Table({
   };
 
   return (
-    <div className={`${backgroundColor} pt-10 ps-4 pe-4 rounded-md`}>
+    <div className={`${backgroundColor} p-4 rounded-md`}>
       <table
         className={`table-fixed w-full border-collapse ${backgroundColor} pt-3`}
       >

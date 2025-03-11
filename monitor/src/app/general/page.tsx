@@ -51,7 +51,7 @@ export default function GeneralAnalysis() {
             </ol>
           </div>
           {/* Right Column - Table */}
-          <div className="bg-white rounded-lg shadow-md p-6">
+          <div className="bg-white rounded-lg shadow-md">
             <Table
               data={percentileData}
               columns={percentileDataColumns}
