@@ -1,3 +1,5 @@
+"use client";
+
 import { Table } from "@/_components/table";
 import ExampleCard from "@/_components/card";
 import ExampleRadarChart from "@/_components/radar_chart";
@@ -6,16 +8,26 @@ import ExampleBarChart from "@/_components/bar_chart";
 import {
   sasbRadarChartColumnData,
   sasbRadarChartFooterData,
-  overallScoreSASBData,
   dimensionColumns,
-  dimensionFooterData,
   sasbRadarChartTableData,
   percentileData,
   percentileDataColumns,
 } from "@/_mocks/data";
+import { useGetOverallScoreSASB } from "@/_handlers/requests/sasb";
+import {
+  transformSummaryToFooter,
+  transformToTableData,
+} from "@/_utils/dataTransformations";
 
 // Main General Analysis Page
 export default function GeneralAnalysis() {
+  const { data: overallScoreSASB, error, isLoading } = useGetOverallScoreSASB();
+
+  if (isLoading) return <div>Loading...</div>;
+  if (error) return <div>Error: {error.message}</div>;
+
+  console.log(overallScoreSASB);
+
   return (
     <>
       <ExampleCard />
@@ -72,10 +84,10 @@ export default function GeneralAnalysis() {
         <div className="bg-white rounded-lg shadow-md mt-4 p-6">
           <h5 className="ps-1 text-primary">Overall Score SASB</h5>
           <Table
-            data={overallScoreSASBData}
+            data={transformToTableData(overallScoreSASB.data)}
             columns={dimensionColumns}
             centerSecondLeft={true}
-            footerData={dimensionFooterData}
+            footerData={transformSummaryToFooter(overallScoreSASB.summary)}
             backgroundColor="bg-white"
           />
         </div>
