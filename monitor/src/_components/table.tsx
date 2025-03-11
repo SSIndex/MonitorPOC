@@ -280,7 +280,7 @@ export function Table({
             <React.Fragment key={row.id}>
               <tr
                 onClick={row.getToggleExpandedHandler()}
-                className={`hover:bg-neutral-200 ${row.getIsExpanded() ? "bg-neutral-200" : backgroundColor}`}
+                className={`hover:bg-neutral-200 backgroundColor}`}
               >
                 {row
                   .getVisibleCells()
@@ -289,11 +289,15 @@ export function Table({
               {row.getIsExpanded() && row.original.nestedData && (
                 <tr>
                   <td colSpan={row.getVisibleCells().length} className="p-0">
-                    <div className="p-2 bg-gray-100">
+                    <div>
                       <Table
                         data={row.original.nestedData as DimensionRow[]}
                         columns={nestedColumns || columns}
-                        backgroundColor="bg-gray-100"
+                        backgroundColor={
+                          backgroundColor === "bg-white"
+                            ? "bg-ssindex-nested-table-background"
+                            : "bg-light"
+                        }
                         centerSecondLeft={false}
                         nestedSortColumn={nestedSortColumn}
                         nestedSortDirection={nestedSortDirection}
