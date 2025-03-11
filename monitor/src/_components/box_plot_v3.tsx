@@ -29,7 +29,7 @@ const data = {
   labels: ["Jan"], // X-axis labels
   datasets: [
     {
-      label: "Box Plot 1",
+      label: "Clínica Meds",
       data: [
         [10, 15, 20, 25, 30], // Jan: min, q1, median, q3, max
         [8, 12, 18, 22, 28], // Feb
@@ -39,10 +39,9 @@ const data = {
       borderColor: "#8884d8",
       borderWidth: 1,
       outlierColor: "#ff0000", // Outliers in red
-      padding: 10, // Space around boxes
     },
     {
-      label: "Box Plot 2",
+      label: "Clínica Los Andes",
       data: [
         [12, 18, 22, 27, 35], // Jan
         [10, 14, 20, 25, 30], // Feb
@@ -52,7 +51,6 @@ const data = {
       borderColor: "#82ca9d",
       borderWidth: 1,
       outlierColor: "#ff0000",
-      padding: 10,
     },
   ],
 };
@@ -63,7 +61,7 @@ const options = {
   maintainAspectRatio: false,
   plugins: {
     legend: {
-      position: "top" as const, // Legend on top
+      position: "right" as const,
       onClick: (e: any, legendItem: any, legend: any) => {
         // Default toggle behavior
         const index = legendItem.datasetIndex;
@@ -83,30 +81,24 @@ const options = {
         },
       },
     },
-    title: {
-      display: true,
-      text: "Box Plots with Toggle",
-    },
   },
   scales: {
     y: {
-      title: { display: true, text: "Value" },
+      title: { display: true, text: "Sentiment Score" },
     },
     x: {
-      title: { display: true, text: "Month" },
+      title: { display: false, text: "Month" },
     },
   },
 };
 
 export default function ChartJsBoxPlot() {
   return (
-    <div className="bg-white rounded-lg shadow-md h-96">
-      <Chart
-        type="boxplot" // Use the boxplot type from the plugin
-        data={data}
-        options={options}
-        height={400} // Match container height
-      />
-    </div>
+    <Chart
+      type="boxplot" // Use the boxplot type from the plugin
+      data={data}
+      options={options}
+      height={400} // Match container height
+    />
   );
 }

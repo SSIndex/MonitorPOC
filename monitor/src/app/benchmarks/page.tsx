@@ -1,5 +1,3 @@
-import { BoxPlotChart } from "@/_components/box_plot";
-import PlotlyBoxPlot from "@/_components/box_plot_v2";
 import ChartJsBoxPlot from "@/_components/box_plot_v3";
 
 // Main General Analysis Page
@@ -13,7 +11,7 @@ export default function BenchmarksAnalysis() {
         Stakeholders feedback classified by company, operating locally, and by
         time
       </p>
-      <div className="bg-white rounded-lg shadow-md h-96">
+      <div className="bg-white rounded-lg shadow-md h-full w-full p-6 mt-4">
         <ChartJsBoxPlot />
         {/* <BoxPlotChart /> */}
         {/* <PlotlyBoxPlot /> */}
