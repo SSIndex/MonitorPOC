@@ -1,12 +1,15 @@
 "use client";
 
 import React from "react";
+import { ChevronDownIcon, ChevronUpIcon } from "@heroicons/react/24/outline";
 import {
   useReactTable,
   getCoreRowModel,
   getExpandedRowModel,
   ColumnDef,
   Header,
+  flexRender,
+  // SortingState,
 } from "@tanstack/react-table";
 import { categorizeScoreToBgClassName } from "@/_utils/classNameUtils";
 
@@ -53,6 +56,8 @@ interface TableProps {
   footerData?: { [key: string]: string | number | null };
   footerWhiteSpaceBetween?: number;
   nestedColumns?: ColumnDef<any>[]; // Optional columns for nested table
+  nestedSortColumn: string;
+  nestedSortDirection: string;
 }
 
 // Main Table Component
@@ -64,6 +69,8 @@ export function Table({
   centerSecondLeft = false,
   footerData,
   nestedColumns,
+  nestedSortColumn,
+  nestedSortDirection,
 }: TableProps) {
   // Constants for common styles
   const COMMON_CELL_CLASSES = "pt-5 pb-5 ps-1 pe-1 text-primary h-20";
@@ -106,7 +113,11 @@ export function Table({
 
     return (
       <th key={header.id} className={`${className} ${textAlign}`}>
-        {header.isPlaceholder ? null : header.column.columnDef.header}
+        <div className="flex items-center gap-2">
+          {header.isPlaceholder
+            ? null
+            : flexRender(header.column.columnDef.header, header.getContext())}
+        </div>
       </th>
     );
   };
@@ -264,6 +275,8 @@ export function Table({
                     <NestedTable
                       nestedData={row.original.nestedData}
                       nestedColumns={nestedColumns}
+                      nestedSortColumn={nestedSortColumn}
+                      nestedSortDirection={nestedSortDirection}
                     />
                   </td>
                 </tr>
@@ -281,10 +294,24 @@ export function Table({
 function NestedTable({
   nestedData,
   nestedColumns,
+  nestedSortColumn,
+  nestedSortDirection,
+  // sortColumn,
 }: {
   nestedData?: any[];
   nestedColumns?: ColumnDef<any>[];
+  nestedSortColumn: string;
+  nestedSortDirection: string;
+  // sortColumn: string;
 }) {
+  console.log("nestedSortColumn", nestedSortColumn);
+  console.log("nestedSortDirection", nestedSortDirection);
+
+  const arrowComponent: Record<string, React.ReactElement> = {
+    asc: <ChevronUpIcon className="h-4 w-4" data-testid="asc-icon" />,
+    desc: <ChevronDownIcon className="h-4 w-4" data-testid="desc-icon" />,
+  };
+
   // If no nested data, return null
   if (!nestedData || nestedData.length === 0) {
     return null;
@@ -324,19 +351,13 @@ function NestedTable({
     );
   }
 
-  // Default case: Render a generic nested table with provided or default columns
-  const defaultColumns: ColumnDef<any>[] = nestedColumns || [
-    { header: "Column 1", accessorKey: Object.keys(nestedData[0])[0] },
-    { header: "Column 2", accessorKey: Object.keys(nestedData[0])[1] },
-    {
-      header: "Column 3",
-      accessorKey: Object.keys(nestedData[0])[2] || "default",
-    },
-  ];
-
   const nestedTable = useReactTable({
     data: nestedData,
-    columns: defaultColumns,
+    columns: nestedColumns,
+    // state: {
+    //   sorting,
+    // },
+    // onSortingChange: setSorting,
     getCoreRowModel: getCoreRowModel(),
   });
 
@@ -346,18 +367,36 @@ function NestedTable({
         <thead>
           {nestedTable.getHeaderGroups().map((headerGroup) => (
             <tr key={headerGroup.id}>
-              {headerGroup.headers.map((header) => (
-                <th
-                  key={header.id}
-                  style={{
-                    border: "1px solid gray",
-                    padding: "6px",
-                    background: "#ddd",
-                  }}
-                >
-                  {header.isPlaceholder ? null : header.column.columnDef.header}
-                </th>
-              ))}
+              {headerGroup.headers.map((header) => {
+                const columnField = header.id;
+                const currentSort =
+                  nestedSortColumn === columnField ? nestedSortDirection : "";
+                console.log("currentSort", currentSort);
+                // const currentSort = sort === columnField ? sorting : "";
+
+                return (
+                  <th
+                    key={header.id}
+                    style={{
+                      border: "1px solid gray",
+                      padding: "6px",
+                      background: "#ddd",
+                    }}
+                  >
+                    <div className="flex items-center gap-2">
+                      {header.isPlaceholder
+                        ? null
+                        : flexRender(
+                            header.column.columnDef.header,
+                            header.getContext(),
+                          )}
+                      {(nestedSortColumn === columnField &&
+                        arrowComponent[nestedSortDirection]) ??
+                        ""}
+                    </div>
+                  </th>
+                );
+              })}
             </tr>
           ))}
         </thead>

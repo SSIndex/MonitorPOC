@@ -1,3 +1,5 @@
+"use client";
+
 import { Table } from "@/_components/table";
 import ExampleCard from "@/_components/card";
 import {
@@ -6,9 +8,25 @@ import {
   dimensionColumns,
   subNestedColumns,
 } from "@/_mocks/data";
+import { usePagination } from "@/_hooks/usePagination";
 
-// Main General Analysis Page
-export default function PercentileAnalysis() {
+export default function SASBAnalysis() {
+  const {
+    pageSize,
+    setPageSize,
+    page,
+    setPage,
+    search,
+    setSearch,
+    sortColumn,
+    setSortColumn,
+    sortDirection,
+    setSortDirection,
+  } = usePagination({
+    defaultPageSize: 10,
+    defaultInitialSortColumn: "review",
+  });
+
   return (
     <>
       <ExampleCard />
@@ -28,6 +46,8 @@ export default function PercentileAnalysis() {
             footerData={dimensionFooterData}
             backgroundColor="bg-white"
             nestedColumns={subNestedColumns}
+            nestedSortColumn={sortColumn}
+            nestedSortDirection={sortDirection}
           />
         </div>
         <div className="bg-light rounded-lg shadow-md mt-4 p-6">
