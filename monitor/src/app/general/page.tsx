@@ -20,14 +20,7 @@ import {
 } from "@/_utils/dataTransformations";
 import DatePickerYearly from "@/_components/date_picker";
 import { GaugeChart } from "@/_components/gauge_chart";
-
-const categorizeScore = (score: number): string => {
-  if (score < 20) return "Poor";
-  if (score < 40) return "Low";
-  if (score < 60) return "Average";
-  if (score < 80) return "Good";
-  return "Excellent";
-};
+import { categorizeScoreToText } from "@/_utils/scoreUtils";
 
 // Main General Analysis Page
 export default function GeneralAnalysis() {
@@ -43,11 +36,11 @@ export default function GeneralAnalysis() {
         industry={overallScoreSASB.industryName}
         country={overallScoreSASB.countryName}
         region={overallScoreSASB.regionName}
-        overview={categorizeScore(overallScoreSASB.summary.score)}
+        overview={categorizeScoreToText(overallScoreSASB.summary.score)}
         overviewGraph={
           <GaugeChart
             score={overallScoreSASB.summary.score}
-            scoreText={categorizeScore(overallScoreSASB.summary.score)}
+            scoreText={categorizeScoreToText(overallScoreSASB.summary.score)}
             minValue={0}
             maxValue={100}
           />

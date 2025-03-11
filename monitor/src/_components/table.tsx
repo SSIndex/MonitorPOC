@@ -11,7 +11,7 @@ import {
   flexRender,
   SortingState,
 } from "@tanstack/react-table";
-import { categorizeScoreToBgClassName } from "@/_utils/classNameUtils";
+import { categorizeScoreToBgClassName } from "@/_utils/scoreUtils";
 
 // Constants
 const COMMON_CELL_CLASSES = "pt-5 pb-5 ps-1 pe-1 text-primary h-20";
