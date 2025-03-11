@@ -1,4 +1,7 @@
+"use client";
+
 import TimeTrendsLineChart from "@/_components/line_chart_chartjs";
+import TimeRangeSelector from "@/_components/time_range_selector";
 
 // Main General Analysis Page
 export default function TimeTrendsAnalysis() {
@@ -11,8 +14,8 @@ export default function TimeTrendsAnalysis() {
         Stakeholders feedback classified by company, operating locally, and by
         time
       </p>
-      <div className="bg-white rounded-lg shadow-md mt-4 h-96">
-        {/* <TimeTrendsLineChart /> */}
+      <div className="bg-white rounded-lg shadow-md mt-4 w-full h-full p-4">
+        <TimeRangeSelector onSelect={() => console.log("TimeRange")} />
         <TimeTrendsLineChart />
       </div>
     </section>
