@@ -77,7 +77,7 @@ export const subNestedColumns = [
 ];
 
 // Sample data
-export const dimensionData: DimensionRow[] = [
+export const overallScoreSASBData: DimensionRow[] = [
   {
     id: 1,
     dimension: "ENVIRONMENT",

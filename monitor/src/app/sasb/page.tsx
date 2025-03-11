@@ -4,7 +4,7 @@ import { Table } from "@/_components/table";
 import ExampleCard from "@/_components/card";
 import {
   dimensionFooterData,
-  dimensionData,
+  overallScoreSASBData,
   dimensionColumns,
   subNestedColumns,
 } from "@/_mocks/data";
@@ -40,7 +40,7 @@ export default function SASBAnalysis() {
         <div className="bg-white rounded-lg shadow-md mt-4 p-6">
           <h5 className="ps-1 text-primary">Overall Score SASB</h5>
           <Table
-            data={dimensionData}
+            data={overallScoreSASBData}
             columns={dimensionColumns}
             centerSecondLeft={true}
             footerData={dimensionFooterData}
@@ -53,7 +53,7 @@ export default function SASBAnalysis() {
         <div className="bg-light rounded-lg shadow-md mt-4 p-6">
           <h5 className="ps-1 text-primary">Environment</h5>
           <Table
-            data={dimensionData}
+            data={overallScoreSASBData}
             columns={dimensionColumns}
             centerSecondLeft={true}
             footerData={dimensionFooterData}

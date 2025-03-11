@@ -6,7 +6,7 @@ import ExampleBarChart from "@/_components/bar_chart";
 import {
   sasbRadarChartColumnData,
   sasbRadarChartFooterData,
-  dimensionData,
+  overallScoreSASBData,
   dimensionColumns,
   dimensionFooterData,
   sasbRadarChartTableData,
@@ -72,7 +72,7 @@ export default function GeneralAnalysis() {
         <div className="bg-white rounded-lg shadow-md mt-4 p-6">
           <h5 className="ps-1 text-primary">Overall Score SASB</h5>
           <Table
-            data={dimensionData}
+            data={overallScoreSASBData}
             columns={dimensionColumns}
             centerSecondLeft={true}
             footerData={dimensionFooterData}
