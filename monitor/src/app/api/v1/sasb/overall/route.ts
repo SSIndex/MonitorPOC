@@ -1,7 +1,11 @@
-import { overallScoreSASBData } from "@/_mocks/data";
+import {
+  overallScoreSASBDataSummary,
+  overallScoreSASBDataV2,
+} from "@/_mocks/data";
 
 export async function GET() {
   return Response.json({
-    data: overallScoreSASBData,
+    data: overallScoreSASBDataV2,
+    summary: overallScoreSASBDataSummary,
   });
 }

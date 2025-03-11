@@ -145,6 +145,44 @@ export const overallScoreSASBData: DimensionRow[] = [
   },
 ];
 
+export const overallScoreSASBDataV2: DimensionRow[] = [
+  {
+    id: 1,
+    dimension: "ENVIRONMENT",
+    score: 62,
+    percentile: 75,
+  },
+  {
+    id: 2,
+    dimension: "SOCIAL CAPITAL",
+    score: 45,
+    percentile: 60,
+  },
+  {
+    id: 3,
+    dimension: "HUMAN CAPITAL",
+    score: 78,
+    percentile: 85,
+  },
+  {
+    id: 4,
+    dimension: "LEADERSHIP & GOVERNANCE",
+    score: 35,
+    percentile: 50,
+  },
+  {
+    id: 5,
+    dimension: "OTHERS",
+    score: 35,
+    percentile: 50,
+  },
+];
+
+export const overallScoreSASBDataSummary = {
+  score: 62,
+  percentile: 75,
+};
+
 // Column definitions with proper typing
 export const dimensionColumns: ColumnDef<DimensionRow>[] = [
   { header: "#", accessorKey: "id" },
