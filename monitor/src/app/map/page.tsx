@@ -17,8 +17,7 @@ export default function MapAnalysis() {
         <p className="text-ssindex-graph-grey mt-2">
           Stakeholders feedback classified by territory
         </p>
-        <div className="bg-white rounded-lg shadow-md mt-4 p-6">
-          <h5 className="ps-1 text-primary">Overall Score SASB</h5>
+        <div className="bg-white rounded-lg shadow-md mt-4">
           <Table
             data={overallScoreSASBData}
             columns={dimensionColumns}
