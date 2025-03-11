@@ -103,33 +103,3 @@ export const Card: React.FC<CardProps> = ({
     </section>
   );
 };
-
-// Example usage
-const ExampleCard: React.FC = () => {
-  const generalScore = 65; // Example score
-  const mockMinValue = 0;
-  const mockMaxValue = 100;
-
-  // Mock categorizeScore function
-  const categorizeScore = (score: number): string => {
-    if (score < 20) return "Poor";
-    if (score < 40) return "Low";
-    if (score < 60) return "Average";
-    if (score < 80) return "Good";
-    return "Excellent";
-  };
-
-  return (
-    <Card
-      companyName="Clínica MEDS"
-      industry="Hospitales y Salud"
-      country="Chile"
-      region="South America"
-      overview={categorizeScore(generalScore)}
-      overviewGraph={<ExampleGaugeChart />}
-      datePicker={<DatePickerYearly />}
-    />
-  );
-};
-
-export default ExampleCard;

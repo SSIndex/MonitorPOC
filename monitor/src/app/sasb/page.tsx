@@ -1,7 +1,7 @@
 "use client";
 
 import { Table } from "@/_components/table";
-import ExampleCard from "@/_components/card";
+import { Card } from "@/_components/card";
 import {
   dimensionFooterData,
   overallScoreSASBData,
@@ -9,8 +9,21 @@ import {
   subNestedColumns,
 } from "@/_mocks/data";
 import { usePagination } from "@/_hooks/usePagination";
+import { useGetOverallScoreSASB } from "@/_handlers/requests/sasb";
+import { GaugeChart } from "@/_components/gauge_chart";
+import DatePickerYearly from "@/_components/date_picker";
+
+const categorizeScore = (score: number): string => {
+  if (score < 20) return "Poor";
+  if (score < 40) return "Low";
+  if (score < 60) return "Average";
+  if (score < 80) return "Good";
+  return "Excellent";
+};
 
 export default function SASBAnalysis() {
+  const { data: overallScoreSASB, error, isLoading } = useGetOverallScoreSASB();
+
   const {
     pageSize,
     setPageSize,
@@ -27,9 +40,27 @@ export default function SASBAnalysis() {
     defaultInitialSortColumn: "review",
   });
 
+  if (isLoading) return <div>Loading...</div>;
+  if (error) return <div>Error: {error.message}</div>;
+
   return (
     <>
-      <ExampleCard />
+      <Card
+        companyName={overallScoreSASB.companyName}
+        industry={overallScoreSASB.industryName}
+        country={overallScoreSASB.countryName}
+        region={overallScoreSASB.regionName}
+        overview={categorizeScore(overallScoreSASB.summary.score)}
+        overviewGraph={
+          <GaugeChart
+            score={overallScoreSASB.summary.score}
+            scoreText={categorizeScore(overallScoreSASB.summary.score)}
+            minValue={0}
+            maxValue={100}
+          />
+        }
+        datePicker={<DatePickerYearly />}
+      />
       {/* SASB Impact Analysis Section */}
       <section className="pt-6 mt-6">
         <h4 className="text-xl font-bold text-primary">SASB Impact Analysis</h4>
