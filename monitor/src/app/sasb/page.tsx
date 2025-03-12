@@ -8,7 +8,6 @@ import {
   dimensionColumns,
   subNestedColumns,
 } from "@/_mocks/data";
-import { usePagination } from "@/_hooks/usePagination";
 import {
   useGetOverallScoreSASB,
   useGetSASBReviews,
@@ -21,31 +20,26 @@ import {
   transformSummaryToFooter,
   transformToTableData,
 } from "@/_utils/dataTransformations";
+import { SortingState } from "@tanstack/react-table";
+import { useState } from "react";
 
 export default function SASBAnalysis() {
+  const [sorting, setSorting] = useState<SortingState>([
+    { id: "review", desc: true },
+  ]);
+
   // Maybe here use Promise.All or something to fetch in parallel
   const { data: overallScoreSASB, error, isLoading } = useGetOverallScoreSASB();
   const {
     data: reviews,
     error: reviewsError,
     isLoading: reviewsIsLoading,
-  } = useGetSASBReviews("Clínica MEDS");
-
-  const {
-    pageSize,
-    setPageSize,
-    page,
-    setPage,
-    search,
-    setSearch,
-    sortColumn,
-    setSortColumn,
-    sortDirection,
-    setSortDirection,
-  } = usePagination({
-    defaultPageSize: 10,
-    defaultInitialSortColumn: "review",
-  });
+  } = useGetSASBReviews(
+    "Clínica MEDS",
+    undefined,
+    sorting[0]?.desc === true ? "desc" : "asc",
+    sorting[0]?.id,
+  );
 
   if (isLoading && reviewsIsLoading) return <div>Loading...</div>;
   if (error && reviewsError)
@@ -99,8 +93,12 @@ export default function SASBAnalysis() {
             footerData={transformSummaryToFooter(overallScoreSASB.summary)}
             backgroundColor="bg-white"
             nestedColumns={subNestedColumns}
-            nestedSortColumn={sortColumn}
-            nestedSortDirection={sortDirection}
+            nestedSorting={sorting}
+            nestedOnSortingChange={(updaterOrValue) => {
+              const newState = updaterOrValue(sorting);
+              setSorting(newState);
+              return newState;
+            }}
           />
         </div>
         <div className="bg-light rounded-lg shadow-md mt-4 p-6">

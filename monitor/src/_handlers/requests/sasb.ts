@@ -12,13 +12,17 @@ export const useGetOverallScoreSASB = () => {
   });
 };
 
-export const useGetSASBReviews = (companyName: string, dimension?: string) => {
-  console.log("companyName", companyName);
-  let endpoint = `${baseURL}/reviews?companyName=${companyName}`;
+export const useGetSASBReviews = (
+  companyName: string,
+  dimension?: string,
+  sorting: "asc" | "desc" = "desc",
+  sortBy: string = "review",
+) => {
+  let endpoint = `${baseURL}/reviews?companyName=${companyName}&sort=${sorting}&sortBy=${sortBy}`;
   endpoint = dimension ? `${endpoint}&dimension=${dimension}` : endpoint;
 
   return useQuery({
-    queryKey: ["sasbReviews", dimension, companyName],
+    queryKey: ["sasbReviews", dimension, companyName, sorting, sortBy],
     queryFn: async () => {
       const response = await fetch(endpoint);
       return response.json();

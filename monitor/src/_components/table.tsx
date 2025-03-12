@@ -1,7 +1,11 @@
 "use client";
 
 import React from "react";
-import { ChevronDownIcon, ChevronUpIcon } from "@heroicons/react/24/outline";
+import {
+  ChevronDownIcon,
+  ChevronUpDownIcon,
+  ChevronUpIcon,
+} from "@heroicons/react/24/outline";
 import {
   useReactTable,
   getCoreRowModel,
@@ -10,6 +14,7 @@ import {
   Header,
   flexRender,
   SortingState,
+  OnChangeFn,
 } from "@tanstack/react-table";
 import { categorizeScoreToBgClassName } from "@/_utils/scoreUtils";
 
@@ -86,9 +91,9 @@ interface TableProps {
   centerSecondLeft?: boolean;
   footerData?: FooterData;
   nestedColumns?: ColumnDef<any>[];
-  nestedSortColumn?: string;
-  nestedSortDirection?: "asc" | "desc";
   isNested?: boolean; // Indicates if this is a nested table (limits recursion)
+  nestedSorting?: SortingState;
+  nestedOnSortingChange?: OnChangeFn<SortingState>;
 }
 
 // Main Table Component
@@ -100,33 +105,47 @@ export function Table({
   centerSecondLeft = false,
   footerData,
   nestedColumns,
-  nestedSortColumn,
-  nestedSortDirection,
   isNested = false,
+  nestedSorting,
+  nestedOnSortingChange,
 }: TableProps) {
-  const [sorting, setSorting] = React.useState<SortingState>(
-    nestedSortColumn && nestedSortDirection
-      ? [{ id: nestedSortColumn, desc: nestedSortDirection === "desc" }]
-      : [],
-  );
 
   const headerColor = getHeaderColor(backgroundColor, headerBackgroundColor);
   const headerClasses = `${HEADER_BASE_CLASSES} ${headerColor}`;
 
-  const table = useReactTable({
-    data,
-    columns,
-    state: { sorting },
-    onSortingChange: setSorting,
-    getCoreRowModel: getCoreRowModel(),
-    getExpandedRowModel: getExpandedRowModel(),
-    getRowCanExpand: () => !isNested, // Disable expansion for nested tables
-  });
+  let table;
+  if (isNested) {
+    table = useReactTable({
+      data,
+      columns,
+      state: { sorting: nestedSorting },
+      onSortingChange: nestedOnSortingChange,
+      // onSortingChange: setSorting,
+      getCoreRowModel: getCoreRowModel(),
+      getExpandedRowModel: getExpandedRowModel(),
+      getRowCanExpand: () => !isNested, // Disable expansion for nested tables
+      manualSorting: true,
+    });
+  } else {
+    // Meanwhile Sorting is enabled only on nested tables
+    table = useReactTable({
+      data,
+      columns,
+      getCoreRowModel: getCoreRowModel(),
+      getExpandedRowModel: getExpandedRowModel(),
+      getRowCanExpand: () => !isNested, // Disable expansion for nested tables
+      manualSorting: true,
+    });
+  }
 
-  const arrowComponent: Record<"asc" | "desc", React.ReactElement> = {
-    asc: <ChevronUpIcon className="h-4 w-4" data-testid="asc-icon" />,
-    desc: <ChevronDownIcon className="h-4 w-4" data-testid="desc-icon" />,
-  };
+  const arrowComponent: Record<"asc" | "desc" | "default", React.ReactElement> =
+    {
+      asc: <ChevronUpIcon className="h-4 w-4" data-testid="asc-icon" />,
+      desc: <ChevronDownIcon className="h-4 w-4" data-testid="desc-icon" />,
+      default: (
+        <ChevronUpDownIcon className="h-4 w-4" data-testid="other-icon" />
+      ),
+    };
 
   const renderHeaderCell = (
     header: Header<DimensionRow, unknown>,
@@ -136,16 +155,25 @@ export function Table({
     const isSecond = index === 1 && centerSecondLeft;
     const isLast = index === table.getHeaderGroups()[0].headers.length - 1;
     const className = `${headerClasses} ${isFirst ? "rounded-l-lg" : ""} ${isFirst && centerSecondLeft ? "w-10" : ""} ${isSecond ? "w-50" : ""} ${isLast ? "rounded-r-lg" : ""}`;
-    const textAlign = isSecond ? "text-left justify-left" : "text-center justify-center";
+    const textAlign = isSecond
+      ? "text-left justify-left"
+      : "text-center justify-center";
 
-    const sortState = sorting.find((s) => s.id === header.id);
-    const currentSort = sortState ? (sortState.desc ? "desc" : "asc") : "";
+    const sortDirection =
+      header.column.getIsSorted() === false
+        ? "default"
+        : header.column.getIsSorted();
 
     return (
       <th key={header.id} className={`${className}`}>
-        <div className={`flex items-center gap-2 ${textAlign}`}>
+        <div
+          className={`flex items-center gap-2 ${textAlign}`}
+          onClick={header.column.getToggleSortingHandler()}
+        >
           {flexRender(header.column.columnDef.header, header.getContext())}
-          {currentSort && arrowComponent[currentSort]}
+          {/* For now only do sorting with nested */}
+          {isNested &&
+            arrowComponent[sortDirection as "asc" | "desc" | "default"]}
         </div>
       </th>
     );
@@ -292,16 +320,16 @@ export function Table({
                     <div>
                       <Table
                         data={row.original.nestedData as DimensionRow[]}
-                        columns={nestedColumns || columns}
+                        columns={nestedColumns}
                         backgroundColor={
                           backgroundColor === "bg-white"
                             ? "bg-ssindex-nested-table-background"
                             : "bg-light"
                         }
                         centerSecondLeft={false}
-                        nestedSortColumn={nestedSortColumn}
-                        nestedSortDirection={nestedSortDirection}
                         isNested={true} // Mark as nested to limit recursion
+                        nestedSorting={nestedSorting}
+                        nestedOnSortingChange={nestedOnSortingChange}
                       />
                     </div>
                   </td>
