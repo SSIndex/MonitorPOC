@@ -183,24 +183,153 @@ export const environmentComments = [
     review: "Good",
     sentiment: "Positive",
     score: 70,
-    dimension: "Sub-Environment",
-    category: "Sub-Category",
-    territoryOrState: "Territory",
+    dimension: "Air Quality",
+    category: "Pollution Control",
+    territoryOrState: "California",
     date: "2021-09-01",
-    dataSource: "Source",
+    dataSource: "EPA",
   },
   {
     review: "Excellent",
     sentiment: "Positive",
     score: 90,
-    dimension: "Sub-Environment",
-    category: "Sub-Category",
-    territoryOrState: "Territory",
-    date: "2021-09-01",
-    dataSource: "Source",
+    dimension: "Water Quality",
+    category: "Clean Water",
+    territoryOrState: "Texas",
+    date: "2021-08-15",
+    dataSource: "USGS",
   },
-]
-
+  {
+    review: "Poor",
+    sentiment: "Negative",
+    score: 30,
+    dimension: "Air Quality",
+    category: "Carbon Emissions",
+    territoryOrState: "New York",
+    date: "2022-01-10",
+    dataSource: "NASA",
+  },
+  {
+    review: "Neutral",
+    sentiment: "Neutral",
+    score: 50,
+    dimension: "Biodiversity",
+    category: "Wildlife Protection",
+    territoryOrState: "Florida",
+    date: "2023-03-22",
+    dataSource: "WWF",
+  },
+  {
+    review: "Satisfactory",
+    sentiment: "Positive",
+    score: 65,
+    dimension: "Waste Management",
+    category: "Recycling Programs",
+    territoryOrState: "Illinois",
+    date: "2022-11-11",
+    dataSource: "State Reports",
+  },
+  {
+    review: "Terrible",
+    sentiment: "Negative",
+    score: 20,
+    dimension: "Deforestation",
+    category: "Logging Impact",
+    territoryOrState: "Amazon",
+    date: "2020-06-30",
+    dataSource: "Greenpeace",
+  },
+  {
+    review: "Very Good",
+    sentiment: "Positive",
+    score: 80,
+    dimension: "Air Quality",
+    category: "Green Energy",
+    territoryOrState: "Colorado",
+    date: "2021-07-19",
+    dataSource: "EPA",
+  },
+  {
+    review: "Mediocre",
+    sentiment: "Neutral",
+    score: 55,
+    dimension: "Water Quality",
+    category: "Industrial Waste",
+    territoryOrState: "Michigan",
+    date: "2023-05-14",
+    dataSource: "Local Authority",
+  },
+  {
+    review: "Horrible",
+    sentiment: "Negative",
+    score: 10,
+    dimension: "Waste Management",
+    category: "Landfills",
+    territoryOrState: "Nevada",
+    date: "2019-12-25",
+    dataSource: "NGO Report",
+  },
+  {
+    review: "Amazing",
+    sentiment: "Positive",
+    score: 95,
+    dimension: "Renewable Energy",
+    category: "Solar Power",
+    territoryOrState: "Arizona",
+    date: "2022-09-10",
+    dataSource: "Energy Department",
+  },
+  {
+    review: "Disappointing",
+    sentiment: "Negative",
+    score: 40,
+    dimension: "Climate Change",
+    category: "CO2 Emissions",
+    territoryOrState: "Washington",
+    date: "2021-04-17",
+    dataSource: "IPCC",
+  },
+  {
+    review: "Acceptable",
+    sentiment: "Neutral",
+    score: 60,
+    dimension: "Forestry",
+    category: "Reforestation Efforts",
+    territoryOrState: "Oregon",
+    date: "2023-01-05",
+    dataSource: "Forest Service",
+  },
+  {
+    review: "Fantastic",
+    sentiment: "Positive",
+    score: 88,
+    dimension: "Sustainability",
+    category: "Eco-Friendly Policies",
+    territoryOrState: "Vermont",
+    date: "2022-06-21",
+    dataSource: "State Reports",
+  },
+  {
+    review: "Needs Improvement",
+    sentiment: "Negative",
+    score: 45,
+    dimension: "Biodiversity",
+    category: "Endangered Species",
+    territoryOrState: "Alaska",
+    date: "2020-11-30",
+    dataSource: "WWF",
+  },
+  {
+    review: "Could be better",
+    sentiment: "Neutral",
+    score: 58,
+    dimension: "Urban Planning",
+    category: "Green Spaces",
+    territoryOrState: "New Jersey",
+    date: "2023-02-12",
+    dataSource: "City Reports",
+  },
+];
 export const socialCapitalComments = [
   {
     review: "Good",
@@ -222,7 +351,7 @@ export const socialCapitalComments = [
     date: "2021-09-01",
     dataSource: "Source",
   },
-]
+];
 
 export const humanCapitalComments = [
   {
@@ -245,7 +374,7 @@ export const humanCapitalComments = [
     date: "2021-09-01",
     dataSource: "Source",
   },
-]
+];
 
 export const leadershipAndGovernanceComments = [
   {
@@ -268,7 +397,7 @@ export const leadershipAndGovernanceComments = [
     date: "2021-09-01",
     dataSource: "Source",
   },
-]
+];
 
 export const othersComments = [
   {
@@ -291,8 +420,7 @@ export const othersComments = [
     date: "2021-09-01",
     dataSource: "Source",
   },
-]
-
+];
 
 export const overallScoreSASBDataSummary = {
   score: 62,
