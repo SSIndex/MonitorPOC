@@ -178,6 +178,122 @@ export const overallScoreSASBDataV2: DimensionRow[] = [
   },
 ];
 
+export const environmentComments = [
+  {
+    review: "Good",
+    sentiment: "Positive",
+    score: 70,
+    dimension: "Sub-Environment",
+    category: "Sub-Category",
+    territoryOrState: "Territory",
+    date: "2021-09-01",
+    dataSource: "Source",
+  },
+  {
+    review: "Excellent",
+    sentiment: "Positive",
+    score: 90,
+    dimension: "Sub-Environment",
+    category: "Sub-Category",
+    territoryOrState: "Territory",
+    date: "2021-09-01",
+    dataSource: "Source",
+  },
+]
+
+export const socialCapitalComments = [
+  {
+    review: "Good",
+    sentiment: "Positive",
+    score: 70,
+    dimension: "Sub-Social Capital",
+    category: "Sub-Category",
+    territoryOrState: "Territory",
+    date: "2021-09-01",
+    dataSource: "Source",
+  },
+  {
+    review: "Excellent",
+    sentiment: "Positive",
+    score: 90,
+    dimension: "Sub-Social Capital",
+    category: "Sub-Category",
+    territoryOrState: "Territory",
+    date: "2021-09-01",
+    dataSource: "Source",
+  },
+]
+
+export const humanCapitalComments = [
+  {
+    review: "Good",
+    sentiment: "Positive",
+    score: 70,
+    dimension: "Sub-Human Capital",
+    category: "Sub-Category",
+    territoryOrState: "Territory",
+    date: "2021-09-01",
+    dataSource: "Source",
+  },
+  {
+    review: "Excellent",
+    sentiment: "Positive",
+    score: 90,
+    dimension: "Sub-Human Capital",
+    category: "Sub-Category",
+    territoryOrState: "Territory",
+    date: "2021-09-01",
+    dataSource: "Source",
+  },
+]
+
+export const leadershipAndGovernanceComments = [
+  {
+    review: "Good",
+    sentiment: "Positive",
+    score: 70,
+    dimension: "Sub-Leadership & Governance",
+    category: "Sub-Category",
+    territoryOrState: "Territory",
+    date: "2021-09-01",
+    dataSource: "Source",
+  },
+  {
+    review: "Excellent",
+    sentiment: "Positive",
+    score: 90,
+    dimension: "Sub-Leadership & Governance",
+    category: "Sub-Category",
+    territoryOrState: "Territory",
+    date: "2021-09-01",
+    dataSource: "Source",
+  },
+]
+
+export const othersComments = [
+  {
+    review: "Good",
+    sentiment: "Positive",
+    score: 70,
+    dimension: "Sub-Others",
+    category: "Sub-Category",
+    territoryOrState: "Territory",
+    date: "2021-09-01",
+    dataSource: "Source",
+  },
+  {
+    review: "Excellent",
+    sentiment: "Positive",
+    score: 90,
+    dimension: "Sub-Others",
+    category: "Sub-Category",
+    territoryOrState: "Territory",
+    date: "2021-09-01",
+    dataSource: "Source",
+  },
+]
+
+
 export const overallScoreSASBDataSummary = {
   score: 62,
   percentile: 75,
