@@ -38,6 +38,22 @@ export function transformToTableData(rawData) {
   }));
 }
 
+export function toCamelCase(str: string): string {
+  return str
+    .toLowerCase()
+    .split(" ")
+    .map((word, index) =>
+      index === 0
+        ? word
+        : word.charAt(0).toUpperCase() + word.slice(1).toLowerCase(),
+    )
+    .join("");
+}
+
+export function replaceAndWithAmpersand(str: string): string {
+  return str.replace(" and ", " & ");
+}
+
 // Utility function to convert to title case
 function toTitleCase(str: string): string {
   return str

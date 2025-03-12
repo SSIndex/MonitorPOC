@@ -12,12 +12,10 @@ export const useGetOverallScoreSASB = () => {
   });
 };
 
-export const useGetSASBReviews = (dimension: string, companyName: string) => {
-  let endpoint = `${baseURL}/reviews`;
-  endpoint =
-    dimension && companyName
-      ? `${endpoint}?dimension=${dimension}&companyName=${companyName}`
-      : endpoint;
+export const useGetSASBReviews = (companyName: string, dimension?: string) => {
+  console.log("companyName", companyName);
+  let endpoint = `${baseURL}/reviews?companyName=${companyName}`;
+  endpoint = dimension ? `${endpoint}&dimension=${dimension}` : endpoint;
 
   return useQuery({
     queryKey: ["sasbReviews", dimension, companyName],

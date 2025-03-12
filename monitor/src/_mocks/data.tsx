@@ -166,7 +166,7 @@ export const overallScoreSASBDataV2: DimensionRow[] = [
   },
   {
     id: 4,
-    dimension: "LEADERSHIP & GOVERNANCE",
+    dimension: "LEADERSHIP AND GOVERNANCE",
     score: 35,
     percentile: 50,
   },

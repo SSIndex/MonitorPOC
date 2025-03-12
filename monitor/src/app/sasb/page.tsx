@@ -17,6 +17,7 @@ import { GaugeChart } from "@/_components/gauge_chart";
 import DatePickerYearly from "@/_components/date_picker";
 import { categorizeScoreToText } from "@/_utils/scoreUtils";
 import {
+  toCamelCase,
   transformSummaryToFooter,
   transformToTableData,
 } from "@/_utils/dataTransformations";
@@ -28,7 +29,7 @@ export default function SASBAnalysis() {
     data: reviews,
     error: reviewsError,
     isLoading: reviewsIsLoading,
-  } = useGetSASBReviews("ENVIRONMENT", "Clínica MEDS");
+  } = useGetSASBReviews("Clínica MEDS");
 
   const {
     pageSize,
@@ -52,7 +53,7 @@ export default function SASBAnalysis() {
 
   // Add reviews to the overallScoreSASB data
   overallScoreSASB.data = overallScoreSASB.data.map((dimensionRow) => {
-    const dimensionName = dimensionRow.dimension.toLowerCase();
+    const dimensionName = toCamelCase(dimensionRow.dimension);
     if (!reviews || !(dimensionName in reviews)) {
       return dimensionRow;
     }
