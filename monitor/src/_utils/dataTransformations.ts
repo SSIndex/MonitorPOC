@@ -34,6 +34,7 @@ export function transformToTableData(rawData) {
     excellent: item.score >= 80,
     scoreColor: item.score,
     percentileColor: item.percentile,
+    nestedData: item.reviews,
   }));
 }
 

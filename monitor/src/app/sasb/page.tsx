@@ -9,13 +9,26 @@ import {
   subNestedColumns,
 } from "@/_mocks/data";
 import { usePagination } from "@/_hooks/usePagination";
-import { useGetOverallScoreSASB } from "@/_handlers/requests/sasb";
+import {
+  useGetOverallScoreSASB,
+  useGetSASBReviews,
+} from "@/_handlers/requests/sasb";
 import { GaugeChart } from "@/_components/gauge_chart";
 import DatePickerYearly from "@/_components/date_picker";
 import { categorizeScoreToText } from "@/_utils/scoreUtils";
+import {
+  transformSummaryToFooter,
+  transformToTableData,
+} from "@/_utils/dataTransformations";
 
 export default function SASBAnalysis() {
+  // Maybe here use Promise.All or something to fetch in parallel
   const { data: overallScoreSASB, error, isLoading } = useGetOverallScoreSASB();
+  const {
+    data: reviews,
+    error: reviewsError,
+    isLoading: reviewsIsLoading,
+  } = useGetSASBReviews("ENVIRONMENT", "Clínica MEDS");
 
   const {
     pageSize,
@@ -33,8 +46,23 @@ export default function SASBAnalysis() {
     defaultInitialSortColumn: "review",
   });
 
-  if (isLoading) return <div>Loading...</div>;
-  if (error) return <div>Error: {error.message}</div>;
+  if (isLoading && reviewsIsLoading) return <div>Loading...</div>;
+  if (error && reviewsError)
+    return <div>Error: {error.message || reviewsError.message}</div>;
+
+  // Add reviews to the overallScoreSASB data
+  overallScoreSASB.data = overallScoreSASB.data.map((dimensionRow) => {
+    const dimensionName = dimensionRow.dimension.toLowerCase();
+    if (!reviews || !(dimensionName in reviews)) {
+      return dimensionRow;
+    }
+
+    const reviewsData = reviews[dimensionName];
+    return {
+      ...dimensionRow,
+      reviews: reviewsData,
+    };
+  });
 
   return (
     <>
@@ -64,10 +92,10 @@ export default function SASBAnalysis() {
         <div className="bg-white rounded-lg shadow-md mt-4 p-6">
           <h5 className="ps-1 text-primary">Overall Score SASB</h5>
           <Table
-            data={overallScoreSASBData}
+            data={transformToTableData(overallScoreSASB.data)}
             columns={dimensionColumns}
             centerSecondLeft={true}
-            footerData={dimensionFooterData}
+            footerData={transformSummaryToFooter(overallScoreSASB.summary)}
             backgroundColor="bg-white"
             nestedColumns={subNestedColumns}
             nestedSortColumn={sortColumn}
