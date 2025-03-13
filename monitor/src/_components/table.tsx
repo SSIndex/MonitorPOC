@@ -81,6 +81,7 @@ interface FooterData {
   excellent?: string | number | null;
   scoreColor?: string | number | null;
   percentileColor?: string | number | null;
+  rowCount?: number | null;
 }
 
 interface TableProps {
@@ -94,6 +95,9 @@ interface TableProps {
   isNested?: boolean; // Indicates if this is a nested table (limits recursion)
   nestedSorting?: SortingState;
   nestedOnSortingChange?: OnChangeFn<SortingState>;
+  pagination?;
+  onPaginationChange?;
+  rowCount?;
 }
 
 // Main Table Component
@@ -108,35 +112,40 @@ export function Table({
   isNested = false,
   nestedSorting,
   nestedOnSortingChange,
+  pagination,
+  onPaginationChange,
 }: TableProps) {
-
   const headerColor = getHeaderColor(backgroundColor, headerBackgroundColor);
   const headerClasses = `${HEADER_BASE_CLASSES} ${headerColor}`;
-
+  // console.log('onPaginationChange', onPaginationChange);
+  // console.log('isNested', isNested);
+  // console.log('pagination', pagination);
   let table;
-  if (isNested) {
-    table = useReactTable({
-      data,
-      columns,
-      state: { sorting: nestedSorting },
-      onSortingChange: nestedOnSortingChange,
-      // onSortingChange: setSorting,
-      getCoreRowModel: getCoreRowModel(),
-      getExpandedRowModel: getExpandedRowModel(),
-      getRowCanExpand: () => !isNested, // Disable expansion for nested tables
-      manualSorting: true,
-    });
-  } else {
-    // Meanwhile Sorting is enabled only on nested tables
-    table = useReactTable({
-      data,
-      columns,
-      getCoreRowModel: getCoreRowModel(),
-      getExpandedRowModel: getExpandedRowModel(),
-      getRowCanExpand: () => !isNested, // Disable expansion for nested tables
-      manualSorting: true,
-    });
-  }
+  // if (isNested) {
+  table = useReactTable({
+    data,
+    columns,
+    state: { sorting: nestedSorting, pagination: pagination },
+    onPaginationChange: onPaginationChange,
+    onSortingChange: nestedOnSortingChange,
+    getCoreRowModel: getCoreRowModel(),
+    getExpandedRowModel: getExpandedRowModel(),
+    getRowCanExpand: () => !isNested, // Disable expansion for nested tables
+    manualSorting: true,
+    manualPagination: true,
+    rowCount: 15,
+  });
+  // }
+  // else {
+  //   // Meanwhile Sorting is enabled only on nested tables
+  //   table = useReactTable({
+  //     data,
+  //     columns,
+  //     getCoreRowModel: getCoreRowModel(),
+  //     getExpandedRowModel: getExpandedRowModel(),
+  //     getRowCanExpand: () => !isNested, // Disable expansion for nested tables
+  //   });
+  // }
 
   const arrowComponent: Record<"asc" | "desc" | "default", React.ReactElement> =
     {
@@ -330,7 +339,43 @@ export function Table({
                         isNested={true} // Mark as nested to limit recursion
                         nestedSorting={nestedSorting}
                         nestedOnSortingChange={nestedOnSortingChange}
+                        onPaginationChange={onPaginationChange}
+                        pagination={pagination}
                       />
+                      <div className="flex justify-end items-center gap-2 pt-2 pb-2">
+                        <div>Page</div>
+                        <button
+                          className="bg-primary text-white rounded-md p-1"
+                          onClick={() => table.previousPage()}
+                          disabled={!table.getCanPreviousPage()}
+                        >
+                          {"<"}
+                        </button>
+                        <span>
+                          {table.getState().pagination.pageIndex + 1} of{" "}
+                          {table.getPageCount().toLocaleString()}
+                        </span>
+                        <button
+                          className="bg-primary text-white rounded-md p-1"
+                          onClick={() => table.nextPage()}
+                          disabled={!table.getCanNextPage()}
+                        >
+                          {">"}
+                        </button>
+                        <select
+                          value={table.getState().pagination.pageSize}
+                          onChange={(e) => {
+                            console.log("e.target.value", e.target.value);
+                            table.setPageSize(Number(e.target.value));
+                          }}
+                        >
+                          {[5, 10, 20, 30, 40, 50].map((pageSize) => (
+                            <option key={pageSize} value={pageSize}>
+                              {pageSize}
+                            </option>
+                          ))}
+                        </select>
+                      </div>
                     </div>
                   </td>
                 </tr>

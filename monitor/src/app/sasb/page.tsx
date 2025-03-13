@@ -20,13 +20,18 @@ import {
   transformSummaryToFooter,
   transformToTableData,
 } from "@/_utils/dataTransformations";
-import { SortingState } from "@tanstack/react-table";
+import { PaginationState, SortingState } from "@tanstack/react-table";
 import { useState } from "react";
 
 export default function SASBAnalysis() {
   const [sorting, setSorting] = useState<SortingState>([
     { id: "review", desc: true },
   ]);
+
+  const [pagination, setPagination] = useState<PaginationState>({
+    pageIndex: 0,
+    pageSize: 5,
+  });
 
   // Maybe here use Promise.All or something to fetch in parallel
   const { data: overallScoreSASB, error, isLoading } = useGetOverallScoreSASB();
@@ -39,6 +44,8 @@ export default function SASBAnalysis() {
     undefined,
     sorting[0]?.desc === true ? "desc" : "asc",
     sorting[0]?.id,
+    pagination.pageIndex,
+    pagination.pageSize,
   );
 
   if (isLoading && reviewsIsLoading) return <div>Loading...</div>;
@@ -99,6 +106,13 @@ export default function SASBAnalysis() {
               setSorting(newState);
               return newState;
             }}
+            pagination={pagination}
+            // onPaginationChange={setPagination}
+            onPaginationChange={(updaterOrValue) => {
+              const newState = updaterOrValue(pagination);
+              setPagination(newState);
+              return newState;
+            }}
           />
         </div>
         <div className="bg-light rounded-lg shadow-md mt-4 p-6">
@@ -110,6 +124,18 @@ export default function SASBAnalysis() {
             footerData={dimensionFooterData}
             backgroundColor="bg-light"
             nestedColumns={subNestedColumns}
+            nestedSorting={sorting}
+            nestedOnSortingChange={(updaterOrValue) => {
+              const newState = updaterOrValue(sorting);
+              setSorting(newState);
+              return newState;
+            }}
+            pagination={pagination}
+            onPaginationChange={(updaterOrValue) => {
+              const newState = updaterOrValue(pagination);
+              setPagination(newState);
+              return newState;
+            }}
           />
         </div>
       </section>
