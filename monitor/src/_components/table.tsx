@@ -17,23 +17,8 @@ import {
   HEADER_BASE_CLASSES,
   getHeaderColor,
   renderHeaderCell,
+  DimensionRow,
 } from "@/_utils/tableUtils";
-
-// Interfaces
-interface DimensionRow {
-  id: number;
-  dimension: string;
-  noData: boolean;
-  poor: boolean;
-  low: boolean;
-  average: boolean;
-  good: boolean;
-  excellent: boolean;
-  scoreColor: number;
-  percentileColor: number;
-  nestedData?: DimensionRow[] | any[];
-  totalRows?: number;
-}
 
 interface FooterData {
   id?: string | number | null;

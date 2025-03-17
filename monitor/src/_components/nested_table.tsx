@@ -11,27 +11,13 @@ import {
   PaginationState,
 } from "@tanstack/react-table";
 import {
+  DimensionRow,
   getHeaderColor,
   HEADER_BASE_CLASSES,
   renderDataCell,
   renderHeaderCell,
 } from "@/_utils/tableUtils";
 
-// Interfaces
-interface DimensionRow {
-  id: number;
-  dimension: string;
-  noData: boolean;
-  poor: boolean;
-  low: boolean;
-  average: boolean;
-  good: boolean;
-  excellent: boolean;
-  scoreColor: number;
-  percentileColor: number;
-  nestedData?: DimensionRow[];
-  totalRows?: number;
-}
 interface NestedTableProps {
   data: DimensionRow[];
   columns: ColumnDef<DimensionRow>[];

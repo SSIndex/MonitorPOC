@@ -69,7 +69,7 @@ export const getHeaderColor = (
 };
 
 // Interfaces
-interface DimensionRow {
+export interface DimensionRow {
   id: number;
   dimension: string;
   noData: boolean;
@@ -80,7 +80,7 @@ interface DimensionRow {
   excellent: boolean;
   scoreColor: number;
   percentileColor: number;
-  nestedData?: DimensionRow[] | any[];
+  nestedData?: DimensionRow[];
   totalRows?: number;
 }
 
