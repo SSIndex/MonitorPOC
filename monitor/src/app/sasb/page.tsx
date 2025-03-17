@@ -114,7 +114,7 @@ export default function SASBAnalysis() {
               setPagination(newState);
               return newState;
             }}
-            totalRows={15}
+            totalRows={overallScoreSASB.data.length}
           />
         </div>
         <div className="bg-light rounded-lg shadow-md mt-4 p-6">

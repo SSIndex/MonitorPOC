@@ -145,7 +145,7 @@ export function Table({
                       nestedOnSortingChange={nestedOnSortingChange}
                       pagination={pagination}
                       onPaginationChange={onPaginationChange}
-                      totalRows={totalRows}
+                      totalRows={row.original.totalRows}
                     />
                   </td>
                 </tr>
