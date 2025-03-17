@@ -16,9 +16,6 @@ export async function GET(request: Request) {
   const page = searchParams.get("page");
   const pageSize = searchParams.get("pageSize");
 
-  console.log('page en APi', page);
-  console.log('pageSize en API', pageSize);
-
   let environComments = environmentComments;
   let socialComments = socialCapitalComments;
   let humanComments = humanCapitalComments;
@@ -81,8 +78,14 @@ export async function GET(request: Request) {
   // Return all reviews if no dimension is specified
   if (!dimension && companyName === "Clínica MEDS") {
     reviews = {
-      environment: environComments,
-      socialCapital: socialComments,
+      environment: {
+        totalRows: environmentComments.length,
+        comments: environComments,
+      },
+      socialCapital: {
+        totalRows: socialCapitalComments.length,
+        comments: socialComments,
+      },
       humanCapital: humanComments,
       leadershipAndGovernance: leadershipComments,
       others: otherComments,

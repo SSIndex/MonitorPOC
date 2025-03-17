@@ -62,7 +62,8 @@ export default function SASBAnalysis() {
     const reviewsData = reviews[dimensionName];
     return {
       ...dimensionRow,
-      reviews: reviewsData,
+      totalRows: reviewsData.totalRows,
+      reviews: reviewsData.comments,
     };
   });
 
@@ -113,6 +114,7 @@ export default function SASBAnalysis() {
               setPagination(newState);
               return newState;
             }}
+            totalRows={15}
           />
         </div>
         <div className="bg-light rounded-lg shadow-md mt-4 p-6">

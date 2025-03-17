@@ -10,12 +10,10 @@ import {
   OnChangeFn,
   PaginationState,
 } from "@tanstack/react-table";
-import { NestedTable } from "./nested_table";
 import {
-  renderFooterRow,
-  renderDataCell,
-  HEADER_BASE_CLASSES,
   getHeaderColor,
+  HEADER_BASE_CLASSES,
+  renderDataCell,
   renderHeaderCell,
 } from "@/_utils/tableUtils";
 
@@ -65,45 +63,44 @@ interface TableProps {
   totalRows?: number;
 }
 
-// Main Table Component
-export function Table({
+export function NestedTable({
   data,
   columns,
-  backgroundColor = "bg-white",
-  headerBackgroundColor,
-  centerSecondLeft = false,
-  footerData,
-  nestedColumns,
-  isNested = false,
+  backgroundColor,
   nestedSorting,
   nestedOnSortingChange,
   pagination,
   onPaginationChange,
   totalRows,
-}: TableProps) {
-  const headerColor = getHeaderColor(backgroundColor, headerBackgroundColor);
+}: {
+  data: DimensionRow[];
+  columns: ColumnDef<DimensionRow>[];
+  backgroundColor: string;
+  nestedSorting?: SortingState;
+  nestedOnSortingChange?: OnChangeFn<SortingState>;
+  pagination?: PaginationState;
+  onPaginationChange?: OnChangeFn<PaginationState>;
+  totalRows?: number;
+}) {
+  const headerColor = getHeaderColor(backgroundColor);
   const headerClasses = `${HEADER_BASE_CLASSES} ${headerColor}`;
 
   const table = useReactTable({
     data,
     columns,
-    ...(isNested
-      ? {
-          state: { sorting: nestedSorting, pagination },
-          onSortingChange: nestedOnSortingChange,
-          onPaginationChange: onPaginationChange,
-          manualSorting: true,
-          manualPagination: true,
-          rowCount: totalRows ?? data.length,
-        }
-      : {}),
+    state: { sorting: nestedSorting, pagination },
+    onSortingChange: nestedOnSortingChange,
+    onPaginationChange: onPaginationChange,
+    manualSorting: true,
+    manualPagination: true,
+    rowCount: totalRows ?? data.length,
     getCoreRowModel: getCoreRowModel(),
     getExpandedRowModel: getExpandedRowModel(),
-    getRowCanExpand: () => !isNested,
+    getRowCanExpand: () => false, // No further nesting
   });
 
   return (
-    <div className={`${backgroundColor} p-4 rounded-md`}>
+    <div className={`${backgroundColor} p-4`}>
       <table
         className={`table-fixed w-full border-collapse ${backgroundColor} pt-3`}
       >
@@ -112,8 +109,8 @@ export function Table({
             <tr key={headerGroup.id}>
               {headerGroup.headers.map((header, i) =>
                 renderHeaderCell(header, i, table, headerClasses, {
-                  centerSecondLeft: true,
-                  showSortIcons: false,
+                  centerSecondLeft: false,
+                  showSortIcons: true,
                 }),
               )}
             </tr>
@@ -121,40 +118,47 @@ export function Table({
         </thead>
         <tbody>
           {table.getRowModel().rows.map((row) => (
-            <React.Fragment key={row.id}>
-              <tr
-                onClick={row.getToggleExpandedHandler()}
-                className={`hover:bg-neutral-200 ${row.getIsExpanded() ? "bg-neutral-200" : backgroundColor}`}
-              >
-                {row
-                  .getVisibleCells()
-                  .map((cell, i) => renderDataCell(cell, i, centerSecondLeft))}
-              </tr>
-              {row.getIsExpanded() && row.original.nestedData && (
-                <tr>
-                  <td colSpan={row.getVisibleCells().length} className="p-0">
-                    <NestedTable
-                      data={row.original.nestedData as DimensionRow[]}
-                      columns={nestedColumns}
-                      backgroundColor={
-                        backgroundColor === "bg-white"
-                          ? "bg-ssindex-nested-table-background"
-                          : "bg-light"
-                      }
-                      nestedSorting={nestedSorting}
-                      nestedOnSortingChange={nestedOnSortingChange}
-                      pagination={pagination}
-                      onPaginationChange={onPaginationChange}
-                      totalRows={totalRows}
-                    />
-                  </td>
-                </tr>
-              )}
-            </React.Fragment>
+            <tr key={row.id}>
+              {row
+                .getVisibleCells()
+                .map((cell, i) => renderDataCell(cell, i, false, true))}
+            </tr>
           ))}
-          {footerData && renderFooterRow(footerData)}
         </tbody>
       </table>
+      <div className="flex justify-end items-center gap-2 pt-2 pb-2">
+        <div>Page</div>
+        <button
+          className="bg-primary text-white rounded-md p-1"
+          onClick={() => table.previousPage()}
+          disabled={!table.getCanPreviousPage()}
+        >
+          {"<"}
+        </button>
+        <span>
+          {table.getState().pagination.pageIndex + 1} of{" "}
+          {table.getPageCount().toLocaleString()}
+        </span>
+        <button
+          className="bg-primary text-white rounded-md p-1"
+          onClick={() => table.nextPage()}
+          disabled={!table.getCanNextPage()}
+        >
+          {">"}
+        </button>
+        <select
+          value={table.getState().pagination.pageSize}
+          onChange={(e) => {
+            table.setPageSize(Number(e.target.value));
+          }}
+        >
+          {[5, 10, 20, 30, 40, 50].map((pageSize) => (
+            <option key={pageSize} value={pageSize}>
+              {pageSize}
+            </option>
+          ))}
+        </select>
+      </div>
     </div>
   );
 }
