@@ -24,7 +24,15 @@ export const useGetSASBReviews = (
   endpoint = dimension ? `${endpoint}&dimension=${dimension}` : endpoint;
 
   return useQuery({
-    queryKey: ["sasbReviews", dimension, companyName, sorting, sortBy, page, pageSize],
+    queryKey: [
+      "sasbReviews",
+      dimension,
+      companyName,
+      sorting,
+      sortBy,
+      page,
+      pageSize,
+    ],
     queryFn: async () => {
       const response = await fetch(endpoint);
       return response.json();

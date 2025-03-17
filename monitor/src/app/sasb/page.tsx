@@ -103,16 +103,21 @@ export default function SASBAnalysis() {
             nestedColumns={subNestedColumns}
             nestedSorting={sorting}
             nestedOnSortingChange={(updaterOrValue) => {
-              const newState = updaterOrValue(sorting);
-              setSorting(newState);
-              return newState;
+              if (typeof updaterOrValue === "function") {
+                const newState = updaterOrValue(sorting);
+                setSorting(newState);
+                return newState;
+              }
+              return updaterOrValue;
             }}
             pagination={pagination}
-            // onPaginationChange={setPagination}
             onPaginationChange={(updaterOrValue) => {
-              const newState = updaterOrValue(pagination);
-              setPagination(newState);
-              return newState;
+              if (typeof updaterOrValue === "function") {
+                const newState = updaterOrValue(pagination);
+                setPagination(newState);
+                return newState;
+              }
+              return updaterOrValue;
             }}
             totalRows={overallScoreSASB.data.length}
           />
@@ -128,15 +133,21 @@ export default function SASBAnalysis() {
             nestedColumns={subNestedColumns}
             nestedSorting={sorting}
             nestedOnSortingChange={(updaterOrValue) => {
-              const newState = updaterOrValue(sorting);
-              setSorting(newState);
-              return newState;
+              if (typeof updaterOrValue === "function") {
+                const newState = updaterOrValue(sorting);
+                setSorting(newState);
+                return newState;
+              }
+              return updaterOrValue;
             }}
             pagination={pagination}
             onPaginationChange={(updaterOrValue) => {
-              const newState = updaterOrValue(pagination);
-              setPagination(newState);
-              return newState;
+              if (typeof updaterOrValue === "function") {
+                const newState = updaterOrValue(pagination);
+                setPagination(newState);
+                return newState;
+              }
+              return updaterOrValue;
             }}
           />
         </div>

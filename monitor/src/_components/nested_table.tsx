@@ -29,33 +29,13 @@ interface DimensionRow {
   excellent: boolean;
   scoreColor: number;
   percentileColor: number;
-  nestedData?: DimensionRow[] | any[];
+  nestedData?: DimensionRow[];
   totalRows?: number;
 }
-
-interface FooterData {
-  id?: string | number | null;
-  dimension?: string | number | null;
-  noData?: string | number | null;
-  poor?: string | number | null;
-  low?: string | number | null;
-  average?: string | number | null;
-  good?: string | number | null;
-  excellent?: string | number | null;
-  scoreColor?: string | number | null;
-  percentileColor?: string | number | null;
-  rowCount?: number | null;
-}
-
-interface TableProps {
+interface NestedTableProps {
   data: DimensionRow[];
   columns: ColumnDef<DimensionRow>[];
-  backgroundColor?: string;
-  headerBackgroundColor?: string;
-  centerSecondLeft?: boolean;
-  footerData?: FooterData;
-  nestedColumns?: ColumnDef<any>[];
-  isNested?: boolean;
+  backgroundColor: string;
   nestedSorting?: SortingState;
   nestedOnSortingChange?: OnChangeFn<SortingState>;
   pagination?: PaginationState;
@@ -72,16 +52,7 @@ export function NestedTable({
   pagination,
   onPaginationChange,
   totalRows,
-}: {
-  data: DimensionRow[];
-  columns: ColumnDef<DimensionRow>[];
-  backgroundColor: string;
-  nestedSorting?: SortingState;
-  nestedOnSortingChange?: OnChangeFn<SortingState>;
-  pagination?: PaginationState;
-  onPaginationChange?: OnChangeFn<PaginationState>;
-  totalRows?: number;
-}) {
+}: NestedTableProps) {
   const headerColor = getHeaderColor(backgroundColor);
   const headerClasses = `${HEADER_BASE_CLASSES} ${headerColor}`;
 
@@ -93,7 +64,7 @@ export function NestedTable({
     onPaginationChange: onPaginationChange,
     manualSorting: true,
     manualPagination: true,
-    rowCount: totalRows ?? data.length,
+    rowCount: totalRows,
     getCoreRowModel: getCoreRowModel(),
     getExpandedRowModel: getExpandedRowModel(),
     getRowCanExpand: () => false, // No further nesting
@@ -111,7 +82,7 @@ export function NestedTable({
                 renderHeaderCell(header, i, table, headerClasses, {
                   centerSecondLeft: false,
                   showSortIcons: true,
-                }),
+                })
               )}
             </tr>
           ))}
@@ -121,7 +92,7 @@ export function NestedTable({
             <tr key={row.id}>
               {row
                 .getVisibleCells()
-                .map((cell, i) => renderDataCell(cell, i, false, true))}
+                .map((cell, i) => renderDataCell(cell, i, false))}
             </tr>
           ))}
         </tbody>
