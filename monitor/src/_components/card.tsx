@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useMemo } from "react";
+import React, { JSX, useMemo } from "react";
 import ExampleGaugeChart from "./gauge_chart";
 import DatePickerYearly from "./date_picker";
 import clinicaMeds from "../../public/clinicaMeds.jpeg";

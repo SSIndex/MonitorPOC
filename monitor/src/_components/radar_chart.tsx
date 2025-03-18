@@ -19,7 +19,7 @@ ChartJS.register(
   LineElement,
   Filler,
   Tooltip,
-  Legend,
+  Legend
 );
 
 interface RadarChartProps {
@@ -81,7 +81,7 @@ export const ExampleRadarChart: React.FC = () => {
     ],
     datasets: [
       {
-        // label: 'Company ESG Performance',
+        label: "Company ESG Performance",
         data: [75, 60, 85, 50, 70, 45],
         backgroundColor: "rgba(255, 255, 255, 0)",
         borderColor: "rgb(34, 40, 197)",

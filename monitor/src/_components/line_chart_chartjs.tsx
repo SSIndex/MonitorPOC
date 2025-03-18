@@ -196,7 +196,7 @@ const options = {
         display: true,
         text: "SASB Pillar",
         padding: { bottom: 10 },
-        font: { size: 14, weight: "bold" },
+        font: { size: 14, weight: 700 },
       },
       // Use default Chart.js toggle behavior (no custom onClick)
     },

@@ -1,3 +1,6 @@
+import { DimensionRow } from "@/_utils/tableUtils";
+import { ColumnDef } from "@tanstack/react-table";
+
 export const sasbRadarChartColumnData = [
   { header: "#", accessorKey: "id" },
   { header: "Dimension", accessorKey: "dimension" },
