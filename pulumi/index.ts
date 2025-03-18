@@ -1,9 +1,32 @@
-import * as pulumi from "@pulumi/pulumi";
-import * as aws from "@pulumi/aws";
-import * as awsx from "@pulumi/awsx";
+import { prjName } from './config/utils';
+import { elbUp, iamUp, s3Up, smUp, vpcUp, docdbUp, acmUp } from './config/aws';
 
-// Create an AWS resource (S3 Bucket)
-const bucket = new aws.s3.BucketV2("my-bucket");
+export const appDir = "./app-monitor.zip";
 
-// Export the name of the bucket
-export const bucketName = bucket.id;
+export const {vpc, docdbSecurityGroup}= vpcUp(prjName);
+
+export const { instanceProfileRole, instanceProfile } = iamUp(prjName);
+
+export const { envSecrets } = smUp(prjName)
+
+// export const { certificateArn } = acmUp('monitor.ssindex.com');
+
+const certificateArn = null;
+
+export const { appBucket, appBucketObject } = s3Up(prjName, appDir);
+
+export const { docdbCluster, docdbInstance } = docdbUp(prjName, docdbSecurityGroup);
+
+export const { application , appVersion, environment } = elbUp(
+    appBucket,
+    appBucketObject,
+    docdbCluster,
+    docdbInstance,
+    certificateArn,
+    envSecrets,
+    instanceProfile,
+    docdbSecurityGroup,
+    vpc,
+    prjName,
+    'production'
+);
