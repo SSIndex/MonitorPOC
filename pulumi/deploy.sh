@@ -2,7 +2,7 @@
 
 rm -rf *.zip;
 
-cd ..;
+cd ../monitor;
 
 # Create the zip file, excluding .gitignore patterns and .git directory
-zip -9 -r ./pulumi/app-monitor.zip . -x@./monitor/.gitignore -x ./.git\* && cd ./pulumi && pulumi up
+zip -9 -r -x@.gitignore ../pulumi/app-monitor.zip ./* ../.git\* && cd ../pulumi && pulumi up

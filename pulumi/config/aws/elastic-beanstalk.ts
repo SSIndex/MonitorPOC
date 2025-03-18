@@ -122,11 +122,6 @@ export const elb = (() => {
       },
       {
         namespace: 'aws:elasticbeanstalk:application:environment',
-        name: 'FLASK_SECRET_KEY',
-        value: envSecrets.apply((secrets: {[key: string]: Output<string>}) => secrets[prjName('FlaskSecretKey')])
-      },
-      {
-        namespace: 'aws:elasticbeanstalk:application:environment',
         name: 'MONITOR_CLIENT_ID',
         value: envSecrets.apply((secrets: {[key: string]: Output<string>}) => secrets[prjName('MonitorClientId')])
       },

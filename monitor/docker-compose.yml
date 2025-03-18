@@ -1,0 +1,27 @@
+services:
+  next_app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: with-docker-multi-env-production
+    ports:
+      - "3003:3000"
+    networks:
+      - app-network
+  nginx-proxy:
+    image: nginx:stable-alpine
+    restart: always
+    networks:
+      - app-network
+    ports:
+      - 80:80
+      - 443:443
+    volumes:
+      - "${EB_LOG_BASE_DIR}/nginx-proxy:/var/log/nginx"
+      - ./docker/load_balancer:/etc/nginx/conf.d
+    depends_on:
+      - next_app
+
+networks:
+  app-network:
+    driver: bridge
