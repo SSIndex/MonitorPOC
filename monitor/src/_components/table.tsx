@@ -97,7 +97,7 @@ export function Table({
             <tr key={headerGroup.id}>
               {headerGroup.headers.map((header, i) =>
                 renderHeaderCell(header, i, table, headerClasses, {
-                  centerSecondLeft: true,
+                  centerSecondLeft: centerSecondLeft,
                   showSortIcons: false,
                 }),
               )}
