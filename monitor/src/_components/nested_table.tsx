@@ -68,7 +68,7 @@ export function NestedTable({
                 renderHeaderCell(header, i, table, headerClasses, {
                   centerSecondLeft: false,
                   showSortIcons: true,
-                })
+                }),
               )}
             </tr>
           ))}

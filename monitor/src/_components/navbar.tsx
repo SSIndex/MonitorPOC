@@ -34,16 +34,10 @@ export default function Navbar() {
           >
             General
           </Link>
-          <Link
-            href="/sasb"
-            className="hover:text-gray-300 transition-colors"
-          >
+          <Link href="/sasb" className="hover:text-gray-300 transition-colors">
             SASB
           </Link>
-          <Link
-            href={"/map"}
-            className="hover:text-gray-300 transition-colors"
-          >
+          <Link href={"/map"} className="hover:text-gray-300 transition-colors">
             MAP
           </Link>
           <Link

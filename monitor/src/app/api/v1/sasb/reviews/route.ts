@@ -66,13 +66,13 @@ export async function GET(request: Request) {
   }
 
   if (page && pageSize) {
-    console.log("PAGINANDO");
-    console.log("page", page);
-    console.log("pageSize", pageSize);
     const start = Number(page) * Number(pageSize);
     const end = start + Number(pageSize);
     environComments = environComments.slice(start, end);
     socialComments = socialComments.slice(start, end);
+    humanComments = humanComments.slice(start, end);
+    leadershipComments = leadershipComments.slice(start, end);
+    otherComments = otherComments.slice(start, end);
   }
 
   // Return all reviews if no dimension is specified

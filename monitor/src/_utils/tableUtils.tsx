@@ -98,22 +98,6 @@ interface FooterData {
   rowCount?: number | null;
 }
 
-interface TableProps {
-  data: DimensionRow[];
-  columns: ColumnDef<DimensionRow>[];
-  backgroundColor?: string;
-  headerBackgroundColor?: string;
-  centerSecondLeft?: boolean;
-  footerData?: FooterData;
-  nestedColumns?: ColumnDef<any>[];
-  isNested?: boolean;
-  nestedSorting?: SortingState;
-  nestedOnSortingChange?: OnChangeFn<SortingState>;
-  pagination?: PaginationState;
-  onPaginationChange?: OnChangeFn<PaginationState>;
-  totalRows?: number;
-}
-
 export const renderHeaderCell = (
   header: Header<DimensionRow, unknown>,
   index: number,
@@ -160,7 +144,11 @@ export const renderHeaderCell = (
   );
 };
 
-export const renderDataCell = (cell: any, index: number, centerSecondLeft) => {
+export const renderDataCell = (
+  cell: any,
+  index: number,
+  centerSecondLeft: boolean,
+) => {
   const columnId = cell.column.id;
   const value = cell.getValue() as string | number | boolean;
   // const alignClass = "justify-center text-center";

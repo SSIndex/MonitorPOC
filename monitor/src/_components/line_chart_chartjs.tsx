@@ -214,7 +214,7 @@ const options = {
       grid: { borderDash: [5, 5], color: "#ccc" },
     },
   },
-//   hover: { mode: "index", intersect: false },
+  //   hover: { mode: "index", intersect: false },
 };
 
 export default function TimeTrendsLineChart() {
