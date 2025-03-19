@@ -1,0 +1,48 @@
+services:
+  next_app:
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+    env_file:
+      - .env.development
+    ports:
+      - "3003:3000"
+    networks:
+      - app-network
+    volumes:
+      - ./:/app
+    depends_on:
+      - mongodb
+    
+
+  mongodb:
+    image: mongo:latest
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: devuser
+      MONGO_INITDB_ROOT_PASSWORD: devpass
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongodb-data:/data/db
+    networks:
+      - app-network
+
+  nginx-proxy:
+    image: nginx:stable-alpine
+    restart: always
+    networks:
+      - app-network
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./docker/load_balancer:/etc/nginx/conf.d
+    depends_on:
+      - next_app
+
+networks:
+  app-network:
+    driver: bridge
+
+volumes:
+  mongodb-data:
