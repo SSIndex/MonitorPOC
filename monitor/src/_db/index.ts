@@ -6,26 +6,33 @@ export class DatabaseConnection {
   private MONGO_HOST: string = process.env.MONGO_HOST || "";
   private MONGO_PORT: number = Number(process.env.MONGO_PORT) || 27017;
   private MONGO_DATABASE: string = process.env.MONGO_DATABASE || "test";
-  private MONGO_URI: string = `mongodb://${this.MONGO_USERNAME}:${this.MONGO_PASSWORD}@${this.MONGO_HOST}:${this.MONGO_PORT}/?tls=true&replicaSet=rs0&readPreference=secondaryPreferred&retryWrites=false`;
+  private APP_ENV: string = process.env.APP_ENV || "development";
+  private MONGO_URI: string =
+    this.APP_ENV === "development"
+      ? `mongodb://${this.MONGO_USERNAME}:${this.MONGO_PASSWORD}@${this.MONGO_HOST}:${this.MONGO_PORT}/${this.MONGO_DATABASE}`
+      : `mongodb://${this.MONGO_USERNAME}:${this.MONGO_PASSWORD}@${this.MONGO_HOST}:${this.MONGO_PORT}/?tls=true&replicaSet=rs0&readPreference=secondaryPreferred&retryWrites=false`;
   private db: Db | null = null;
   private client: MongoClient | null = null;
 
   async connect(): Promise<void> {
     try {
+      // console.log('MONGO_URI', MONGO_URI);
+
+      console.log("ENV VARIABLES", process.env);
       console.log(
         `Establishing connection with ${this.MONGO_USERNAME} to ${this.MONGO_HOST} at port ${this.MONGO_PORT}...`
       );
-      console.log("MONGO_URI:", this.MONGO_URI);
       this.client = new MongoClient(this.MONGO_URI, {
-        tlsCAFile: "/etc/pki/tls/certs/global-bundle.pem",
+        ...(this.APP_ENV !== "development" && {
+          tlsCAFile: "/etc/pki/tls/certs/global-bundle.pem",
+        }),
       });
       await this.client.connect();
       console.log("Connection established successfully!");
-
       this.db = this.client.db(this.MONGO_DATABASE);
     } catch (e) {
-      console.error("Could not connect to Document DB. Error:", e);
-      throw e; // Optionally rethrow to handle errors upstream
+      console.error("Could not connect to DB. Error:", e);
+      throw e;
     }
   }
 
