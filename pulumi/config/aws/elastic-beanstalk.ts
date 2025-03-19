@@ -95,10 +95,16 @@ export const elb = (() => {
     ]
 
     const envVars = [
+      // TODO: CHECK if use the instance or the cluster
+      // {
+      //   namespace: 'aws:elasticbeanstalk:application:environment',
+      //   name: 'MONGO_HOST',
+      //   value: docdbInstance.endpoint.apply(value => value),
+      // },
       {
-        namespace: 'aws:elasticbeanstalk:application:environment',
-        name: 'MONGO_HOST',
-        value: docdbInstance.endpoint.apply(value => value),
+        namespace: "aws:elasticbeanstalk:application:environment",
+        name: "MONGO_HOST",
+        value: docdbCluster.endpoint.apply((value) => value),
       },
       {
         namespace: 'aws:elasticbeanstalk:application:environment',
@@ -224,7 +230,7 @@ export const elb = (() => {
     const environment = new elasticbeanstalk.Environment(prjName('env'), {
       application: application.name,
       version: appVersion,
-      solutionStackName: '64bit Amazon Linux 2 v3.8.3 running Docker',
+      solutionStackName: '64bit Amazon Linux 2 v4.4.4 running Docker',
       settings: [
         ...networkAndReportSettings,
         ...scalingSettings,

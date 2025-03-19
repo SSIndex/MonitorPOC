@@ -1,9 +1,14 @@
+import { DatabaseConnection } from "@/_db";
 import {
   overallScoreSASBDataSummary,
   overallScoreSASBDataV2,
 } from "@/_mocks/data";
 
 export async function GET() {
+  // Connect to the database
+  const database = new DatabaseConnection();
+  await database.connect();
+
   return Response.json({
     companyName: "Clínica MEDS",
     industryName: "Hospitales y Salud",

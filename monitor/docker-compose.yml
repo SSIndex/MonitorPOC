@@ -3,11 +3,23 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
+    environment:
+      - MONGO_USERNAME=${MONGO_USERNAME}
+      - MONGO_PASSWORD=${MONGO_PASSWORD}
+      - MONGO_HOST=${MONGO_HOST}
+      - MONGO_PORT=${MONGO_PORT}
+      - MONITOR_CLIENT_ID=${MONITOR_CLIENT_ID}
+      - MONITOR_SCOPE=${MONITOR_SCOPE}
+      - COGNITO_SERVER_METADATA_URL=${COGNITO_SERVER_METADATA_URL}
+      - APP_ENV=${APP_ENV}
+
     image: with-docker-multi-env-production
     ports:
       - "3003:3000"
     networks:
       - app-network
+    volumes:
+      - /etc/pki/tls/certs/global-bundle.pem:/etc/pki/tls/certs/global-bundle.pem:ro
   nginx-proxy:
     image: nginx:stable-alpine
     restart: always
