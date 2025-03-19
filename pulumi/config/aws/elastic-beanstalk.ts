@@ -230,7 +230,7 @@ export const elb = (() => {
     const environment = new elasticbeanstalk.Environment(prjName('env'), {
       application: application.name,
       version: appVersion,
-      solutionStackName: '64bit Amazon Linux 2 v4.4.4 running Docker',
+      solutionStackName: '64bit Amazon Linux 2 v4.0.8 running Docker',
       settings: [
         ...networkAndReportSettings,
         ...scalingSettings,
