@@ -48,8 +48,8 @@ export default function SASBAnalysis() {
     pagination.pageSize,
   );
 
-  if (isLoading && reviewsIsLoading) return <div>Loading...</div>;
-  if (error && reviewsError)
+  if (isLoading || reviewsIsLoading) return <div>Loading...</div>;
+  if (error || reviewsError)
     return <div>Error: {error.message || reviewsError.message}</div>;
 
   // Add reviews to the overallScoreSASB data
