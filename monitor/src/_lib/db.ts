@@ -1,4 +1,18 @@
-import mongoose from "mongoose";
+import mongoose, { Connection } from "mongoose";
+
+declare global {
+  // eslint-disable-next-line no-var
+  var mongoose: {
+    conn: typeof mongoose | null;
+    promise: Promise<typeof mongoose> | null;
+  };
+}
+
+let cachedConnection = global.mongoose;
+
+if (!cachedConnection) {
+  cachedConnection = global.mongoose = { conn: null, promise: null };
+}
 
 export class DatabaseConnection {
   private MONGO_USERNAME: string = process.env.MONGO_USERNAME || "";
@@ -12,9 +26,17 @@ export class DatabaseConnection {
       ? `mongodb://${this.MONGO_USERNAME}:${this.MONGO_PASSWORD}@${this.MONGO_HOST}:${this.MONGO_PORT}/${this.MONGO_DATABASE || "admin"}`
       : `mongodb://${this.MONGO_USERNAME}:${this.MONGO_PASSWORD}@${this.MONGO_HOST}:${this.MONGO_PORT}/${this.MONGO_DATABASE}?tls=true&replicaSet=rs0&readPreference=secondaryPreferred&retryWrites=false`;
 
-  async connect(): Promise<void> {
+  async connect() {
     try {
-      console.log("MONGO URI", this.MONGO_URI);
+      if (cachedConnection.conn) {
+        return cachedConnection.conn;
+      }
+
+      if (cachedConnection && mongoose.connection.readyState !== 0) {
+        console.log("Using existing connection...");
+        return;
+      }
+
       console.log(
         `Establishing connection with ${this.MONGO_USERNAME} to ${this.MONGO_HOST} at port ${this.MONGO_PORT}...`
       );
@@ -36,6 +58,7 @@ export class DatabaseConnection {
 
       // Connect to MongoDB using Mongoose
       await mongoose.connect(this.MONGO_URI, options);
+      cachedConnection = mongoose.connection;
       console.log("Connection established successfully!");
     } catch (e) {
       console.error("Could not connect to DB. Error:", e);
@@ -45,11 +68,12 @@ export class DatabaseConnection {
 
   async createCollection(collectionName: string): Promise<void> {
     try {
+      if (!cachedConnection || cachedConnection === null) {
+        await this.connect();
+      }
       // With Mongoose, collections are created implicitly when you define a model and insert data.
       // However, we can check existence and create explicitly if needed.
-      const collections = await mongoose.connection.db
-        .listCollections()
-        .toArray();
+      const collections = await cachedConnection.listCollections().toArray();
       const collectionExists = collections.some(
         (col) => col.name === collectionName
       );
@@ -57,7 +81,7 @@ export class DatabaseConnection {
       if (!collectionExists) {
         // Mongoose doesn't have a direct createCollection method like MongoClient,
         // so we use the underlying connection's db object
-        await mongoose.connection.db.createCollection(collectionName);
+        await cachedConnection.db.createCollection(collectionName);
         console.log(`Collection ${collectionName} created successfully!`);
       } else {
         console.log(`Collection ${collectionName} already exists.`);
@@ -70,16 +94,20 @@ export class DatabaseConnection {
 
   async closeConnection(): Promise<void> {
     try {
-      if (mongoose.connection.readyState !== 0) {
-        // 0 = disconnected
+      if (cachedConnection && mongoose.connection.readyState !== 0) {
         console.log("Closing DB connection...");
         await mongoose.connection.close();
+        cachedConnection = null; // Clear the cache
         console.log("DB Connection closed.");
       }
     } catch (e) {
       console.error("Error in closeConnection:", e);
       throw e;
     }
+  }
+
+  static getConnection(): Connection | null {
+    return cachedConnection;
   }
 }
 
