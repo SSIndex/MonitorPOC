@@ -86,9 +86,18 @@ export async function GET(request: Request) {
         totalRows: socialCapitalComments.length,
         comments: socialComments,
       },
-      humanCapital: humanComments,
-      leadershipAndGovernance: leadershipComments,
-      others: otherComments,
+      humanCapital: {
+        totalRows: humanCapitalComments.length,
+        comments: humanComments,
+      },
+      leadershipAndGovernance: {
+        comments: leadershipComments,
+        totalRows: leadershipAndGovernanceComments.length,
+      },
+      others: {
+        comments: otherComments,
+        totalRows: othersComments.length,
+      },
     };
   }
 
