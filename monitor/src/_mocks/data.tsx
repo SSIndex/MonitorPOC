@@ -79,75 +79,6 @@ export const subNestedColumns = [
   },
 ];
 
-// Sample data
-export const overallScoreSASBData: DimensionRow[] = [
-  {
-    id: 1,
-    dimension: "ENVIRONMENT",
-    noData: false,
-    poor: false,
-    low: false,
-    average: false,
-    good: true,
-    excellent: false,
-    scoreColor: 62,
-    percentileColor: 75,
-    nestedData: nestedData,
-  },
-  {
-    id: 2,
-    dimension: "SOCIAL CAPITAL",
-    noData: false,
-    poor: false,
-    low: false,
-    average: true,
-    good: false,
-    excellent: false,
-    scoreColor: 45,
-    percentileColor: 60,
-    nestedData: nestedData,
-  },
-  {
-    id: 3,
-    dimension: "HUMAN CAPITAL",
-    noData: false,
-    poor: false,
-    low: false,
-    average: false,
-    good: true,
-    excellent: false,
-    scoreColor: 78,
-    percentileColor: 85,
-    nestedData: nestedData,
-  },
-  {
-    id: 4,
-    dimension: "LEADERSHIP & GOVERNANCE",
-    noData: false,
-    poor: false,
-    low: true,
-    average: false,
-    good: false,
-    excellent: false,
-    scoreColor: 35,
-    percentileColor: 50,
-    nestedData: nestedData,
-  },
-  {
-    id: 5,
-    dimension: "OTHERS",
-    noData: false,
-    poor: false,
-    low: true,
-    average: false,
-    good: false,
-    excellent: false,
-    scoreColor: 35,
-    percentileColor: 50,
-    nestedData: nestedData,
-  },
-];
-
 export const overallScoreSASBDataV2: DimensionRow[] = [
   {
     id: 1,
@@ -548,16 +479,3 @@ export const percentileData = [
     dataset: <p className="text-ssindex-graph-grey">50 out of 150</p>,
   },
 ];
-
-export const dimensionFooterData = {
-  id: null,
-  dimension: "Total Score",
-  noData: null,
-  poor: null,
-  low: null,
-  average: null,
-  good: null,
-  excellent: null,
-  scoreColor: 62,
-  percentileColor: 75,
-};

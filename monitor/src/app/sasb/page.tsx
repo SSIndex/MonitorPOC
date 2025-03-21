@@ -2,12 +2,7 @@
 
 import { Table } from "@/_components/table";
 import { Card } from "@/_components/card";
-import {
-  dimensionFooterData,
-  overallScoreSASBData,
-  dimensionColumns,
-  subNestedColumns,
-} from "@/_mocks/data";
+import { dimensionColumns, subNestedColumns } from "@/_mocks/data";
 import {
   useGetOverallScoreSASB,
   useGetSASBReviews,
@@ -125,10 +120,10 @@ export default function SASBAnalysis() {
         <div className="bg-light rounded-lg shadow-md mt-4 p-6">
           <h5 className="ps-1 text-primary">Environment</h5>
           <Table
-            data={overallScoreSASBData}
+            data={transformToTableData(overallScoreSASB.data)}
             columns={dimensionColumns}
             centerSecondLeft={true}
-            footerData={dimensionFooterData}
+            footerData={transformSummaryToFooter(overallScoreSASB.summary)}
             backgroundColor="bg-light"
             nestedColumns={subNestedColumns}
             nestedSorting={sorting}
@@ -149,6 +144,7 @@ export default function SASBAnalysis() {
               }
               return updaterOrValue;
             }}
+            totalRows={overallScoreSASB.data.length}
           />
         </div>
       </section>
