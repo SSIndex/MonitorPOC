@@ -9,8 +9,12 @@ import {
   LineElement,
   Tooltip,
   Legend,
+  ChartEvent,
+  LegendItem,
+  LegendElement,
 } from "chart.js";
 import { Line } from "react-chartjs-2";
+import { hexToRgba } from "@/_utils/cssUtils";
 
 // Register Chart.js components
 ChartJS.register(
@@ -165,62 +169,98 @@ const lines = [
   { dataKey: "others", stroke: "#ff00ff", name: "Others" },
 ];
 
-// Prepare Chart.js data (all lines included, visibility controlled by hidden property)
 const chartData = {
   labels: data.map((d) => d.date),
   datasets: lines.map((line) => ({
     label: line.name,
     data: data.map((d) => d[line.dataKey as keyof (typeof data)[0]]),
-    borderColor: line.stroke,
-    backgroundColor: line.stroke,
+    borderColor:
+      line.dataKey !== "totalScore" ? hexToRgba(line.stroke, 0.3) : line.stroke,
+    backgroundColor:
+      line.dataKey !== "totalScore" ? hexToRgba(line.stroke, 0.3) : line.stroke,
     borderWidth: 2,
     fill: false,
-    tension: 0.4, // Matches Recharts "monotone" curve
-    pointRadius: 2,
-    hidden: line.dataKey !== "totalScore", // Only "totalScore" visible initially
+    tension: 0.4,
+    pointRadius: 3,
+    hidden: line.dataKey !== "totalScore",
   })),
-};
-
-// Chart.js options
-const options = {
-  responsive: true,
-  maintainAspectRatio: false,
-  plugins: {
-    legend: {
-      position: "right" as const, // Legend on the right
-      labels: {
-        boxWidth: 10,
-        font: { size: 12 },
-      },
-      title: {
-        display: true,
-        text: "SASB Pillar",
-        padding: { bottom: 10 },
-        font: { size: 14, weight: 700 },
-      },
-      // Use default Chart.js toggle behavior (no custom onClick)
-    },
-    tooltip: {
-      enabled: true,
-    },
-  },
-  scales: {
-    x: {
-      title: { display: true, text: "Date" },
-      grid: { display: false },
-    },
-    y: {
-      title: { display: true, text: "Sentiment Score" },
-      grid: { borderDash: [5, 5], color: "#ccc" },
-    },
-  },
-  //   hover: { mode: "index", intersect: false },
 };
 
 export default function TimeTrendsLineChart() {
   return (
     <div className="h-96">
-      <Line data={chartData} options={options} />
+      <Line
+        data={chartData}
+        options={{
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: {
+              position: "right" as const,
+              align: "start",
+              labels: {
+                boxWidth: 10,
+                font: { size: 12, weight: 300, family: "Manrope" },
+                generateLabels: (chart: ChartJS) => {
+                  return chart.data.datasets.map((dataset: any, i: number) => ({
+                    text: dataset.label,
+                    fillStyle: dataset.borderColor,
+                    strokeStyle: dataset.borderColor,
+                    lineWidth: 2,
+                    datasetIndex: i,
+                    fontColor: dataset.hidden
+                      ? hexToRgba("#333b69", 0.3)
+                      : "#333b69",
+                  }));
+                },
+              },
+              title: {
+                display: true,
+                text: "SASB Pillar",
+                padding: { bottom: 10 },
+                font: { size: 14, weight: 300, family: "Manrope" },
+                color: "#333b69",
+              },
+              onClick: (
+                e: ChartEvent,
+                legendItem: LegendItem,
+                legend: LegendElement<"line">,
+              ) => {
+                const chart = legend.chart;
+                const datasetIndex = legendItem.datasetIndex;
+                if (datasetIndex === undefined) return;
+                const dataset = chart.data.datasets[datasetIndex];
+                dataset.hidden = !dataset.hidden;
+
+                // Update colors based on visibility
+                dataset.borderColor = dataset.hidden
+                  ? hexToRgba(
+                      typeof dataset.borderColor === "string"
+                        ? dataset.borderColor
+                        : "#000000",
+                      0.3,
+                    )
+                  : lines[datasetIndex].stroke;
+                dataset.backgroundColor = dataset.borderColor;
+
+                chart.update();
+              },
+            },
+            tooltip: {
+              enabled: true,
+            },
+          },
+          scales: {
+            x: {
+              title: { display: true, text: "Date" },
+              grid: { display: false },
+            },
+            y: {
+              title: { display: true, text: "Sentiment Score" },
+            },
+          },
+        }}
+      />
     </div>
   );
 }
